@@ -1,6 +1,8 @@
 from datetime import date
 from dataclasses import dataclass
+from typing import Callable, Any
 
+from ...analytics.graphs import types
 from ...analytics.periods import study_periods
 from ...analytics.graphs.days.service import make_graph_by_days
 from ...analytics.graphs.fields.service import make_graph_by_fields
@@ -19,9 +21,9 @@ class GraphStatsResult:
 class StatsResult:
     total_day: int
     total_hour: float
-    avg_hour:float
+    avg_hour: float
 
-def _get_stats(user_id: str, period: str, first_day: date | None = None, last_day: date | None = None) -> StatsResult:
+def _get_stats(user_id: str, period: types.Period, first_day: date | None = None, last_day: date | None = None) -> StatsResult:
     if period == 'all':
         total_hours = total_hour_all(user_id)
         study_days = total_day_all(user_id)
@@ -34,20 +36,23 @@ def _get_stats(user_id: str, period: str, first_day: date | None = None, last_da
     return StatsResult(s['total_day'], s['total_hour'], s['avg_hour'])
 
 # グラフ、統計値の取得
+AggFunc = Callable[..., Any]
+GraphFunc = Callable[..., str]
+
 def get_graph_stats_usecase(
     *,
     user_id: str,
-    period: str | None,
+    period: types.Period,
     year: int | None,
     month_year: str | None,
     month: int | None,
-    horizontalAxis: str | None,
-    verticalAxis: str | None,
-    graphType: str | None,
+    horizontalAxis: types.HorizontalAxis,
+    verticalAxis: types.VerticalAxis,
+    graphType: types.GraphType,
     ) -> GraphStatsResult:
     '''
     1) first_day, last_dayを決める
-    2) logsを取得
+    2) logs, svgを取得
     3) svg, statsを返す
     '''
 
@@ -75,39 +80,35 @@ def get_graph_stats_usecase(
     else:
         raise ValueError(f"invalid period: {period}")
     
-    # 2, 3) logs, svg, stats
-    if horizontalAxis == 'days':
-        logs = agg_by_days(user_id, first_day=first_day, last_day=last_day)
-        svg = make_graph_by_days(
-            logs=logs,
-            period=period,
-            verticalAxis=verticalAxis,
-            graphType=graphType,
-            first_day=first_day,
-            last_day=last_day,
-            year=year,
-            month=month,
-            month_num=month_num,
-            )
+    # 2, 3) logs, svg
+    agg_func: AggFunc
+    graph_func: GraphFunc
 
-        stats = _get_stats(user_id, period, first_day, last_day)
-        return GraphStatsResult(svg=svg, total_day=stats.total_day, total_hour=stats.total_hour, avg_hour=stats.avg_hour)
+    if horizontalAxis == 'days':
+        agg_func = agg_by_days
+        graph_func = make_graph_by_days
 
     elif horizontalAxis == 'fields':
-        logs = agg_by_fields(user_id, first_day=first_day, last_day=last_day)
-        svg = make_graph_by_fields(
-            logs=logs,
-            period=period,
-            verticalAxis=verticalAxis,
-            graphType=graphType,
-            first_day=first_day,
-            last_day=last_day,
-            year=year,
-            month=month,
-            month_num=month_num,
-            )
+        agg_func = agg_by_fields
+        graph_func = make_graph_by_fields
 
-        stats = _get_stats(user_id, period, first_day, last_day)
-        return GraphStatsResult(svg=svg, total_day=stats.total_day, total_hour=stats.total_hour, avg_hour=stats.avg_hour)
+    else:
+        raise ValueError(f"invalid horizontalAxis: {horizontalAxis}")
+    
+    logs = agg_func(user_id, first_day=first_day, last_day=last_day)
+    svg = graph_func(
+        logs=logs,
+        period=period,
+        verticalAxis=verticalAxis,
+        graphType=graphType,
+        first_day=first_day,
+        last_day=last_day,
+        year=year,
+        month=month,
+        month_num=month_num,
+        )
 
-    raise ValueError(f"invalid horizontalAxis: {horizontalAxis}")
+    # 3) stats, response
+    stats = _get_stats(user_id, period, first_day, last_day)
+    return GraphStatsResult(svg=svg, total_day=stats.total_day, total_hour=stats.total_hour, avg_hour=stats.avg_hour)
+
