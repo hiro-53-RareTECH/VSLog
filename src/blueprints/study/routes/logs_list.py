@@ -1,7 +1,7 @@
 from datetime import datetime, date
 
 from flask import jsonify, render_template, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from .. import study_bp
 from ....usecases.study.get_logs_by_month import get_logs_by_month_usecase
@@ -10,6 +10,8 @@ from ....usecases.study.get_logs_by_month import get_logs_by_month_usecase
 @study_bp.route('/study-logs-list/<user_id>', methods=['GET'])
 @login_required
 def study_logs_list_view(user_id: str):
+    if user_id != str(current_user.user_id):
+        return jsonify({'error': 'forbidden'}), 403
     this_year = datetime.now().year
     this_month = datetime.now().month
     this_month_year = date(this_year, this_month, 1).strftime('%Y-%m')

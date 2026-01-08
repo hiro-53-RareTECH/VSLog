@@ -8,8 +8,8 @@ from ....usecases.study.get_graph_stats import get_graph_stats_usecase
 @study_bp.route('/graph/<user_id>', methods=['POST'])
 @login_required
 def get_graph_stats(user_id :str):
-    if user_id != str(current_user.id):
-        return jsonify({"error": "forbidden"}), 403
+    if user_id != str(current_user.user_id):
+        return jsonify({'error': 'forbidden'}), 403
     
     data = request.get_json(silent=True) or {}
     svg, total_day, total_hour, avg_hour = get_graph_stats_usecase(

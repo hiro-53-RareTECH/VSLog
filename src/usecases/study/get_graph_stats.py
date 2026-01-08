@@ -6,7 +6,7 @@ from ...analytics.graphs import types
 from ...analytics.periods import study_periods
 from ...analytics.graphs.days.service import make_graph_by_days
 from ...analytics.graphs.fields.service import make_graph_by_fields
-from ...analytics.db.aggregate import agg_by_fields, agg_by_days
+from ...analytics.db.aggregate import agg_by_days, agg_by_fields
 from ...analytics.db.metrics import sum_hours_and_days, total_day as total_day_all, total_hour as total_hour_all
 from ...analytics.stats.study_stats import build_stats
 

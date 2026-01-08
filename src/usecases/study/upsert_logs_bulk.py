@@ -3,7 +3,7 @@ from datetime import datetime
 
 from flask import flash
 from flask_login import current_user
-from sqlalchemy.exe import IntegrityError
+from sqlalchemy.exc import IntegrityError
 
 from ...extensions import db
 from ...models.fields import Field
