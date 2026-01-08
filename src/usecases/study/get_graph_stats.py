@@ -62,17 +62,25 @@ def get_graph_stats_usecase(
 
     if period == 'this_week':
         today = date.today()
-        first_day, last_day = study_periods.this_week(today)
+        period_range = study_periods.this_week(today)
+        first_day = period_range.first_day
+        last_day = period_range.last_day
     
     elif period == 'last_week':
         today = date.today()
-        first_day, last_day = study_periods.last_week(today)
+        period_range = study_periods.last_week(today)
+        first_day = period_range.first_day
+        last_day = period_range.last_day
     
     elif period == 'month':
-        first_day, last_day, month_num = study_periods.month_range(month_year, month)
-    
+        period_range, month_num = study_periods.month_range(month_year, month)
+        first_day = period_range.first_day
+        last_day = period_range.last_day
+
     elif period == 'year':
-        first_day, last_day = study_periods.year_range(year)
+        period_range = study_periods.year_range(year)
+        first_day = period_range.first_day
+        last_day = period_range.last_day
     
     elif period == 'all':
         pass
