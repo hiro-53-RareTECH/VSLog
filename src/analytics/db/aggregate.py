@@ -8,6 +8,7 @@ from sqlalchemy import func
 from ...extensions import db
 from ...models import Field
 from ...models import StudyLog
+from ...analytics.graphs.types import Period
 
 # 共通のフィルター条件
 def _build_filters(user_id: str, first_day: date | None = None, last_day: date | None = None):
@@ -19,7 +20,7 @@ def _build_filters(user_id: str, first_day: date | None = None, last_day: date |
     return filters
 
 # 横軸表示形式「年月日」の集計
-def agg_by_days(user_id: str, *, period: str, first_day: date | None = None, last_day: date | None = None):
+def agg_by_days(user_id: str, *, period: Period, first_day: date | None = None, last_day: date | None = None):
     if period in ('this_week', 'last_week', 'month'):
         selected_date = StudyLog.study_date
     elif period == 'year':
