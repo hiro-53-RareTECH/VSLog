@@ -3,7 +3,7 @@ from datetime import date
 from flask import jsonify, redirect, render_template, request, url_for
 from flask_login import login_required, current_user
 
-from ..import study_bp
+from .. import study_bp
 from ....usecases.study.get_logs_by_date import get_logs_by_date_usecase
 from ....usecases.study.upsert_logs_bulk import upsert_logs_bulk_usecase
 
@@ -11,17 +11,17 @@ from ....usecases.study.upsert_logs_bulk import upsert_logs_bulk_usecase
 @study_bp.route('/study-logs/<user_id>', methods=['GET', 'POST'])
 @login_required
 def study_logs_view(user_id: str):
-    if user_id != str(current_user.id):
-        return jsonify({"error": "forbidden"}), 403
+    if user_id != str(current_user.user_id):
+        return jsonify({'error': 'forbidden'}), 403
     
     if request.method == 'GET':
         today = date.today().strftime('%Y-%m-%d')
-        date = request.args.get('selected_date') or today
-        return render_template('study/study_logs.html', selected_date=date)
+        selected_date = request.args.get('selected_date') or today
+        return render_template('study/study_logs.html', selected_date=selected_date)
     
     data = request.get_json(silent=True) or {}
-    date = data.get('study_date')
-    result = get_logs_by_date_usecase(user_id=user_id, date=date)
+    selected_date = data.get('study_date')
+    result = get_logs_by_date_usecase(user_id=user_id, selected_date=selected_date)
     return jsonify(result)
 
 # 学習記録登録・編集・削除

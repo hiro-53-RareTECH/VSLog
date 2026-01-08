@@ -14,6 +14,7 @@ submitForm();
 // FetchAPIによる非同期通信
 function submitForm() {
     const formData = new FormData(form);
+    console.log(formData)
     const jsonData = {};
     formData.forEach((value, key) => {
         jsonData[key] = value;
@@ -46,7 +47,7 @@ function submitForm() {
         for (let d = 1; d < totalDays(year, month) + 1; d++) {
             // template要素の内容を複製
             const node = studyLogsTemplate.content.firstElementChild.cloneNode(true);
-            console.log(node);
+            // console.log(node);
             // 一覧行へ日付・曜日の挿入
             const dateObj = new Date(year, month - 1, d);
             node.querySelector('.study-days').textContent = String(d);

@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from flask import render_template
-from flask_login import login_required
+from flask import jsonify, render_template
+from flask_login import login_required, current_user
 
 from ..import study_bp
 
@@ -9,6 +9,8 @@ from ..import study_bp
 @study_bp.route('/dashboard/<user_id>', methods=['GET'])
 @login_required
 def dashboard_view(user_id: str):
+    if user_id != str(current_user.user_id):
+        return jsonify({'error': 'forbidden'}), 403
     this_year = datetime.now().year
     this_month = datetime.now().month
 

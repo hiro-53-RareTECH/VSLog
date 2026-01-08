@@ -6,7 +6,7 @@ from ...analytics.graphs import types
 from ...analytics.periods import study_periods
 from ...analytics.graphs.days.service import make_graph_by_days
 from ...analytics.graphs.fields.service import make_graph_by_fields
-from ...analytics.db.aggregate import agg_by_fields, agg_by_days
+from ...analytics.db.aggregate import agg_by_days, agg_by_fields
 from ...analytics.db.metrics import sum_hours_and_days, total_day as total_day_all, total_hour as total_hour_all
 from ...analytics.stats.study_stats import build_stats
 
@@ -62,17 +62,25 @@ def get_graph_stats_usecase(
 
     if period == 'this_week':
         today = date.today()
-        first_day, last_day = study_periods.this_week(today)
+        period_range = study_periods.this_week(today)
+        first_day = period_range.first_day
+        last_day = period_range.last_day
     
     elif period == 'last_week':
         today = date.today()
-        first_day, last_day = study_periods.last_week(today)
+        period_range = study_periods.last_week(today)
+        first_day = period_range.first_day
+        last_day = period_range.last_day
     
     elif period == 'month':
-        first_day, last_day, month_num = study_periods.month_range(month_year, month)
-    
+        period_range, month_num = study_periods.month_range(month_year, month)
+        first_day = period_range.first_day
+        last_day = period_range.last_day
+
     elif period == 'year':
-        first_day, last_day = study_periods.year_range(year)
+        period_range = study_periods.year_range(year)
+        first_day = period_range.first_day
+        last_day = period_range.last_day
     
     elif period == 'all':
         pass
