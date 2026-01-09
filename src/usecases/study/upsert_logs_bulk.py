@@ -1,5 +1,5 @@
 from __future__ import annotations
-from datetime import datetime
+from datetime import date, datetime
 
 from flask import flash
 from flask_login import current_user
@@ -17,7 +17,7 @@ def upsert_logs_bulk_usecase(*, user_id: str, form) -> dict:
     study_log_ids = form.getlist('study_log_ids[]')
     row_actions = form.getlist('row_actions[]')
     
-    selected_date = ''.join(set(study_dates))
+    selected_date = set(study_dates)
     is_registered = False
 
     try:
@@ -73,4 +73,4 @@ def upsert_logs_bulk_usecase(*, user_id: str, form) -> dict:
     finally:
         db.session.close()
     
-    return {'selected_data': selected_date}
+    return {'selected_date': selected_date}
