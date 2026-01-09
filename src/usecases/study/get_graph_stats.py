@@ -36,9 +36,6 @@ def _get_stats(user_id: str, period: types.Period, first_day: date | None = None
     return StatsResult(s['total_day'], s['total_hour'], s['avg_hour'])
 
 # グラフ、統計値の取得
-AggFunc = Callable[..., Any]
-GraphFunc = Callable[..., str]
-
 def get_graph_stats_usecase(
     *,
     user_id: str,
@@ -89,21 +86,17 @@ def get_graph_stats_usecase(
         raise ValueError(f"invalid period: {period}")
     
     # 2, 3) logs, svg
-    agg_func: AggFunc
-    graph_func: GraphFunc
-
     if horizontalAxis == 'days':
-        agg_func = agg_by_days
+        logs = agg_by_days(user_id, period=period, first_day=first_day, last_day=last_day)
         graph_func = make_graph_by_days
 
     elif horizontalAxis == 'fields':
-        agg_func = agg_by_fields
+        logs = agg_by_fields(user_id, first_day=first_day, last_day=last_day)
         graph_func = make_graph_by_fields
 
     else:
         raise ValueError(f"invalid horizontalAxis: {horizontalAxis}")
     
-    logs = agg_func(user_id, first_day=first_day, last_day=last_day)
     svg = graph_func(
         logs=logs,
         period=period,

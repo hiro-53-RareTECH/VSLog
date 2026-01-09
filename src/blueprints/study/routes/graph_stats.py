@@ -12,7 +12,7 @@ def get_graph_stats(user_id :str):
         return jsonify({'error': 'forbidden'}), 403
     
     data = request.get_json(silent=True) or {}
-    svg, total_day, total_hour, avg_hour = get_graph_stats_usecase(
+    graph_stats_result = get_graph_stats_usecase(
         user_id=user_id,
         period=data.get('period'),
         year=data.get('year'),
@@ -22,6 +22,10 @@ def get_graph_stats(user_id :str):
         verticalAxis=data.get('verticalAxis'),
         graphType=data.get('graphType')
         )
+    svg = graph_stats_result.svg
+    total_day = graph_stats_result.total_day
+    total_hour = graph_stats_result.total_hour
+    avg_hour = graph_stats_result.avg_hour
     
     return jsonify({
         'svg': svg,
