@@ -22,7 +22,7 @@ def read_all(user_id: str):
 
 # 学習日に応じたユーザー毎の学習履歴取得
 def read_by_date(user_id: str, date: str):
-    study_date = datetime.strptime(date, "%Y-%m-%d").date()
+    study_date = datetime.strptime(date, '%Y-%m-%d').date()
     logs = (
         db.session.query(StudyLog.study_log_id, StudyLog.study_date, Field.fieldname.label('fieldname'), StudyLog.content, StudyLog.hour)
         .join(Field, StudyLog.field_id == Field.field_id)
