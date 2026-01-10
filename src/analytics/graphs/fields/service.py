@@ -37,7 +37,7 @@ def make_graph_by_fields(
     plot_data = build_plot_data(logs, verticalAxis=verticalAxis)
 
     # 3.グラフ描画の初期設定（fig, axの準備）
-    fig, ax = plt.subplots(figsize(10, 4))
+    fig, ax = plt.subplots(figsize=(10, 4))
 
     # 4.グラフ種類に応じたグラフ描画
     renderer = get_renderer(graphType)

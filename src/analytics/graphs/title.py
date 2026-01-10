@@ -22,7 +22,7 @@ class TitleContext:
 def _week_title(ctx: TitleContext, date_fmt: str) -> str | None:
     if not (ctx.first_day and ctx.last_day):
         return None
-    return f'{ctx.first_day.strftime(date_fmt)}～{ctx.last_day.strftime(date_fmt)}'
+    return f'{ctx.first_day.strftime(date_fmt)}～{ctx.last_day.strftime(date_fmt)}の学習履歴'
 
 def _month_title(ctx: TitleContext, date_fmt: str) -> str | None:
     if not (ctx.year and ctx.month and ctx.month_num):

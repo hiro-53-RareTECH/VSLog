@@ -18,6 +18,3 @@ class BarRenderer:
         plt.setp(ax.get_xticklabels(), rotation=45, ha='center')
         for x, y in zip(data.labels, data.values):
             plt.text(x, y, f'{y:.2f}', ha='center', va='bottom')
-        
-        ax.legend(loc='upper left', bbox_to_anchor=(1.04, 1), edgecolor='black', borderaxespad=0)
-

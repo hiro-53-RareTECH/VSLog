@@ -9,5 +9,5 @@ def get_renderer(graphType: GraphType) -> FieldsRenderer:
     if graphType == 'bar':
         return BarRenderer()
     if graphType == 'pie':
-        return PieRenderer
+        return PieRenderer()
     raise ValueError(f'invalid graphType: {graphType}')

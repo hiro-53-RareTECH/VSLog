@@ -3,7 +3,7 @@
 .PHONY: up down build logs sh migrate mm csu db
 
 up:        ## 起動
-	docker compose up -d
+	docker compose up
 down:      ## 停止
 	docker compose down
 build:     ## ビルド
