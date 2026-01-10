@@ -41,7 +41,7 @@ def get_graph_stats_usecase(
     user_id: str,
     period: types.Period,
     year: int | None,
-    month_year: str | None,
+    month_year: int | None,
     month: int | None,
     horizontalAxis: types.HorizontalAxis,
     verticalAxis: types.VerticalAxis,

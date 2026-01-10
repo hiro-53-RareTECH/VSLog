@@ -15,9 +15,9 @@ def get_graph_stats(user_id :str):
     graph_stats_result = get_graph_stats_usecase(
         user_id=user_id,
         period=data.get('period'),
-        year=data.get('year'),
-        month_year=data.get('month-year'),
-        month=data.get('month'),
+        year=int(data.get('year')),
+        month_year=int(data.get('month-year')),
+        month=int(data.get('month')),
         horizontalAxis=data.get('horizontalAxis'),
         verticalAxis=data.get('verticalAxis'),
         graphType=data.get('graphType')
