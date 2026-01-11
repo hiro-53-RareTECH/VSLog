@@ -12,11 +12,11 @@ class LineRenderer:
                 series,
                 label=field,
                 color=data.colors.get(field),
-                maker='o',
+                marker='o',
             )
 
         ax.set_xticks(x)
-        ax.set_xticklabels(data.labels, rotation=45, ha='right')
+        ax.set_xticklabels(data.labels, rotation=0, ha='center')
 
         if verticalAxis == 'time':
             ax.set_ylabel('時間')

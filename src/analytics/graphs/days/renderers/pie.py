@@ -14,10 +14,8 @@ class PieRenderer:
                 totals[i] += float(v)
 
         filtered = [(label, total) for label, total in zip(data.labels, totals) if total > 0]
-
         filtered_labels = [label for label, _ in filtered]
         filtered_totals = [total for _, total in filtered]
-
 
         cmap = plt.get_cmap('tab20')
         colors = [cmap(i % cmap.N) for i in range(len(filtered_totals))]
