@@ -12,7 +12,7 @@ class PlotData:
     values: dict[str, list[float]]
     colors: dict[str, str]
 
-def build_plot_data(logs: Sequence[tuple[str, str, str, float | None]], *, period:str, verticalAxis: VerticalAxis, first_day=None, last_day=None, year=None, month=None, month_num=None,) -> PlotData:
+def build_plot_data(logs: Sequence[tuple[str, str, str, float | None]], *, period: str, verticalAxis: VerticalAxis, first_day=None, last_day=None, year=None, month=None, month_num=None,) -> PlotData:
     # x, height
     def make_xaxis(period, logs, first_day, year) -> tuple[list[str], dict[str, int]]:
         if period in ('this_week', 'last_week', 'month'):
@@ -34,6 +34,7 @@ def build_plot_data(logs: Sequence[tuple[str, str, str, float | None]], *, perio
             labels = axis_keys
             index_map = {d: i for i, d in enumerate(axis_keys)}
             return labels, index_map
+        raise ValueError(f"Unsupported period: {period}")
 
     labels, index_map = make_xaxis(period, logs, first_day, year)
 
@@ -42,12 +43,31 @@ def build_plot_data(logs: Sequence[tuple[str, str, str, float | None]], *, perio
     fieldnames = sorted({fieldname for _, fieldname, _, _ in logs})
     values = {f: [0.0] * date_len for f in fieldnames}
 
+    # 日付ごとの合計時間（percent計算用）
+    total_by_date = [0.0] * date_len
+
+    # 全期間合計
+    total_all = 0.0
+
+    # 1周目：時間を集計
     for selected_date, field, _, hour in logs:
         idx = index_map[selected_date]
-        values[field][idx] = float(hour or 0.0)
-    
+        h = float(hour or 0.0)
+        values[field][idx] += h
+        total_all += h
+
+    # 2周目：percentに変換
+    if verticalAxis == 'percent':
+        if total_all > 0:
+            for field in fieldnames:
+                for i in range(date_len):
+                    values[field][i] = values[field][i] / total_all * 100
+        else:
+            for field in fieldnames:
+                for i in range(date_len):
+                    values[field][i] = 0.0
+
     # color
     colors = {fieldname: color for _, fieldname, color, _ in logs}
 
     return PlotData(labels=labels, values=values, colors=colors)
-

@@ -7,8 +7,8 @@ from ..mpl_config import configure_matplotlib
 from .plot_data import build_plot_data
 from ..types import VerticalAxis, GraphType
 from ..title import TitleContext, make_title
+from .renderers import get_renderer
 from ..svg import fig_to_svg_base64
-
 
 def make_graph_by_days(
     *,
@@ -34,10 +34,10 @@ def make_graph_by_days(
     if not logs:
         return None
     
-    plot_data = build_plot_data(logs, verticalAxis=verticalAxis)
+    plot_data = build_plot_data(logs, period=period, verticalAxis=verticalAxis, first_day=first_day, last_day=last_day, year=year, month=month, month_num=month_num)
 
     # 3.グラフ描画の初期設定（fig, axの準備）
-    fig, ax = plt.subplots(figsize(10, 4))
+    fig, ax = plt.subplots(figsize=(10, 4))
 
     # 4.グラフ種類に応じたグラフ描画
     renderer = get_renderer(graphType)
