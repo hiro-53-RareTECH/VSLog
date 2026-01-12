@@ -26,7 +26,10 @@ class BarRenderer:
         ax.set_ylabel('学習時間（時間）' if verticalAxis == 'time' else '学習時間（%）')
 
         ax.set_xticks(x)
-        ax.set_xticklabels(data.labels, rotation=0, ha='center')
+        if len(data.labels) <= 12:
+            ax.set_xticklabels(data.labels, rotation=0, ha='center')
+        else:
+            ax.set_xticklabels(data.labels, rotation=270, ha='center')
 
         # Y上限
         ymax_val = max(bottom) if bottom else 0.0

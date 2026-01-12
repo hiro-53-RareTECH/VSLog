@@ -16,7 +16,10 @@ class LineRenderer:
             )
 
         ax.set_xticks(x)
-        ax.set_xticklabels(data.labels, rotation=0, ha='center')
+        if len(data.labels) <= 12:
+            ax.set_xticklabels(data.labels, rotation=0, ha='center')
+        else:
+            ax.set_xticklabels(data.labels, rotation=270, ha='center')
 
         if verticalAxis == 'time':
             ax.set_ylabel('時間')
