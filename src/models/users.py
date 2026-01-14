@@ -29,10 +29,8 @@ class User(UserMixin, db.Model):
     # get_idをオーバーライドして、login_user()を使用できるようにする
     def get_id(self):
         return self.user_id
-
-    def validate_password(self, password):
-        return check_password_hash(self.password, password)
     
     @classmethod
     def select_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
+    
