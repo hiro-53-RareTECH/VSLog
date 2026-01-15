@@ -19,7 +19,6 @@ const endYear = 2040;
 // 年リスト作成
 for (let y = startYear; y <= endYear; y++) {
     const option = new Option(y, y);
-    console.log(option);
     yearSelect.add(option.cloneNode(true));
     monthYearSelect.add(option);
 };
@@ -27,7 +26,6 @@ for (let y = startYear; y <= endYear; y++) {
 // 月リスト作成
 for (let m = 1; m <= 12; m++) {
     const option = new Option(m, m);
-    console.log(option);
     monthSelect.add(option);
 };
 
