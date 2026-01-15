@@ -14,7 +14,8 @@ button:hover {
 }
 
 .logout {
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 table, th, td {

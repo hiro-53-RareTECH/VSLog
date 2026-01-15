@@ -1,4 +1,10 @@
-/* ホーム画面(index.htmlのcss） */
+/* ホーム画面(dashboard.htmlのcss） */
+select {
+    border-radius: 24px;
+    border: 1px solid;
+    border-color: var(--base-text-color);
+    padding: 6px;
+}
 
 .home-inner {
     max-width: 1120px;
@@ -31,7 +37,11 @@
     align-items: center;
     background-color: var(--contents-bg-color);
     flex: 1;
-    gap: 8px;
+    gap: 12px;
+    border-radius: 24px;
+    border: 1px solid;
+    border-color: var(--base-text-color);
+    padding: 16px;
 }
 
 .home-display-period {
@@ -62,6 +72,10 @@
     background-color: var(--contents-bg-color);
     flex: 1;
     width: 100%;
+    border-radius: 24px;
+    border: 1px solid;
+    border-color: var(--base-text-color);
+    padding: 16px;
 }
 
 .home-stats img {
@@ -90,6 +104,10 @@
     text-align: center;
     overflow-x: scroll;
     width: 100%;
+    border-radius: 24px;
+    border: 1px solid;
+    border-color: var(--base-text-color);
+    padding: 16px;
 }
 
 .home-graph-data {
