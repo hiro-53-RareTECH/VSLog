@@ -32,9 +32,11 @@ document.addEventListener("click", (e) => {
 
 // flashメッセージの表示
 const flashMessage = document.querySelector(".message");
-setTimeout(() => {
-  flashMessage.remove();
-}, 5000);
+if (flashMessage) {
+  setTimeout(() => {
+    flashMessage.remove();
+  }, 5000);
+}
 
 // 空白行の削除
 const removeRow = (btn) => {
