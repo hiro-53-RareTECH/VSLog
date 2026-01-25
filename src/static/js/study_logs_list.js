@@ -1,172 +1,169 @@
 // study_logs_listの動作
 
-
 // 日付を動的に表示
-const dateInput = document.getElementById('study_date');
-const form = document.getElementById('study-date-form');
-dateInput.addEventListener('change', () => {
-    submitForm();
-})
+const dateInput = document.getElementById("study_date");
+const form = document.getElementById("study-date-form");
+dateInput.addEventListener("change", () => {
+  submitForm();
+});
 
 // 初回表示時にも実行（今月の一覧を描画）
 submitForm();
 
 // FetchAPIによる非同期通信
 function submitForm() {
-    const formData = new FormData(form);
-    console.log(formData)
-    const jsonData = {};
-    formData.forEach((value, key) => {
-        jsonData[key] = value;
-    })
-    fetch(form.action, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(jsonData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        const selectedDate = document.getElementById('selected_date');
-        const [year, month] = data.selectedDate.split('-');
-        const today = new Date();
-        const dateString = today.toLocaleDateString(today);
-        selectedDate.innerHTML = `<p>${year}年${month}月の学習履歴一覧</p>`;
-        
-        const totalDays = (year, month) => {
-            const getDays = new Date(year, month, 0).getDate();
-            return getDays;
-        };
-        // console.log(`year:${year},month:${month},totalDays:${totalDays(year, month)}`);
-        const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const formData = new FormData(form);
+  const jsonData = {};
+  formData.forEach((value, key) => {
+    jsonData[key] = value;
+  });
+  fetch(form.action, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(jsonData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const selectedDate = document.getElementById("selected_date");
+      const [year, month] = data.selectedDate.split("-");
+      const today = new Date();
+      const dateString = today.toLocaleDateString(today);
+      selectedDate.innerHTML = `<p>${year}年${month}月の学習履歴一覧</p>`;
 
-        const studyLogsList = document.getElementById('study-logs-list');
-        const studyLogsTemplate = document.getElementById('study-logs-template');
-        studyLogsList.textContent = '';
-        const frag = document.createDocumentFragment();
+      const totalDays = (year, month) => {
+        const getDays = new Date(year, month, 0).getDate();
+        return getDays;
+      };
+      const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-        for (let d = 1; d < totalDays(year, month) + 1; d++) {
-            // template要素の内容を複製
-            const node = studyLogsTemplate.content.firstElementChild.cloneNode(true);
-            // console.log(node);
-            // 一覧行へ日付・曜日の挿入
-            const dateObj = new Date(year, month - 1, d);
-            node.querySelector('.study-days').textContent = String(d);
-            node.querySelector('.day-of-week').textContent = weekdays[dateObj.getDay()];
-            // 学習時間、学習分野の取得
-            const formatted = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-            const studyArray = data.studyDicts[formatted];
-            let subtotalHour = 0;
-            let subtotalMinute = 0;
-            let fieldNames = [];
-            let fieldHour = '';
-            let content = '';
-            if (studyArray) {
-                for (let i = 0; i < studyArray.length; i++) {
-                    // hourから時間・分の取り出し
-                    const h = Math.trunc(studyArray[i]['hour'].toFixed(2));
-                    const m = parseInt(((studyArray[i]['hour'].toFixed(2) - h) * 60).toFixed(0));
-                    let fieldname = studyArray[i]['fieldname'];
-                    // 一覧行の時間・分、分野取得
-                    subtotalHour += h;
-                    subtotalMinute += m;
-                    fieldNames.push(fieldname);
-                    // モーダルウインドウのNo、時間、分野、内容取得
-                    fieldHour +=
-                        `<div class="modal-field-hour-list">
+      const studyLogsList = document.getElementById("study-logs-list");
+      const studyLogsTemplate = document.getElementById("study-logs-template");
+      studyLogsList.textContent = "";
+      const frag = document.createDocumentFragment();
+
+      for (let d = 1; d < totalDays(year, month) + 1; d++) {
+        // template要素の内容を複製
+        const node =
+          studyLogsTemplate.content.firstElementChild.cloneNode(true);
+        // 一覧行へ日付・曜日の挿入
+        const dateObj = new Date(year, month - 1, d);
+        node.querySelector(".study-days").textContent = String(d);
+        node.querySelector(".day-of-week").textContent =
+          weekdays[dateObj.getDay()];
+        // 学習時間、学習分野の取得
+        const formatted = `${year}-${String(month).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+        const studyArray = data.studyDicts[formatted];
+        let subtotalHour = 0;
+        let subtotalMinute = 0;
+        let fieldNames = [];
+        let fieldHour = "";
+        let content = "";
+        if (studyArray) {
+          for (let i = 0; i < studyArray.length; i++) {
+            // hourから時間・分の取り出し
+            const h = Math.trunc(studyArray[i]["hour"].toFixed(2));
+            const m = parseInt(
+              ((studyArray[i]["hour"].toFixed(2) - h) * 60).toFixed(0),
+            );
+            let fieldname = studyArray[i]["fieldname"];
+            // 一覧行の時間・分、分野取得
+            subtotalHour += h;
+            subtotalMinute += m;
+            fieldNames.push(fieldname);
+            // モーダルウインドウのNo、時間、分野、内容取得
+            fieldHour += `<div class="modal-field-hour-list">
                             <p class="num">${[i + 1]}</p>
                             <p class="fn">${fieldname}</p>
                             <p class="hour">${h}時間${m}分</p>
-                        </div>`
-                    content +=
-                        `<div class="content-head">
+                        </div>`;
+            content += `<div class="content-head">
                         <p class="num">${[i + 1]}</p>
                         <p class="c-fn">${fieldname}</p>
                         </div>
                         <div class="content">
-                        <p>${studyArray[i]['content']}</p>
-                        </div>`
-                    // 背景色設定クラスの追加
-                    node.closest('.study-logs-join').classList.add('isLogs');
-                }
-            } else {
-                subtotalHour = 0;
-                subtotalMinute = 0;
-                fieldNames = `なし`
-                fieldHour = `<p class="n-hour">なし</p>`
-                content = `<p class="n-content">なし</p>`
-                // 背景色設定クラスの追加
-                node.closest('.study-logs-join').classList.add('noLogs');
-            }
-            // 合計時間・分の取得
-            let totalHour = subtotalHour + Math.trunc(subtotalMinute / 60);
-            let totalMinute = subtotalMinute - (Math.trunc(subtotalMinute / 60) * 60);
-
-            // 一覧行へ挿入
-            node.querySelector('.total-hours').textContent = `学習時間：${totalHour}時間${totalMinute}分`;
-            node.querySelector('.fields').textContent = `学習分野：${fieldNames}`;
-            // モーダルウインドウへ挿入
-            node.querySelector('.modal-date').innerHTML = `<h1>${year}年${month}月${d}日</h1>`
-            node.querySelector('.modal-total-hour').innerHTML =
-                `<p class="total-hour">${totalHour}時間${totalMinute}分</p>`
-            node.querySelector('.modal-field-hour').innerHTML =
-                `${fieldHour}`
-            node.querySelector('.modal-study-content').innerHTML =
-                `${content}`
-            frag.appendChild(node);
+                        <p>${studyArray[i]["content"]}</p>
+                        </div>`;
+            // 背景色設定クラスの追加
+            node.closest(".study-logs-join").classList.add("isLogs");
+          }
+        } else {
+          subtotalHour = 0;
+          subtotalMinute = 0;
+          fieldNames = `なし`;
+          fieldHour = `<p class="n-hour">なし</p>`;
+          content = `<p class="n-content">なし</p>`;
+          // 背景色設定クラスの追加
+          node.closest(".study-logs-join").classList.add("noLogs");
         }
-        studyLogsList.appendChild(frag)
+        // 合計時間・分の取得
+        let totalHour = subtotalHour + Math.trunc(subtotalMinute / 60);
+        let totalMinute = subtotalMinute - Math.trunc(subtotalMinute / 60) * 60;
+
+        // 一覧行へ挿入
+        node.querySelector(".total-hours").textContent =
+          `学習時間：${totalHour}時間${totalMinute}分`;
+        node.querySelector(".fields").textContent = `学習分野：${fieldNames}`;
+        // モーダルウインドウへ挿入
+        node.querySelector(".modal-date").innerHTML =
+          `<h1>${year}年${month}月${d}日</h1>`;
+        node.querySelector(".modal-total-hour").innerHTML =
+          `<p class="total-hour">${totalHour}時間${totalMinute}分</p>`;
+        node.querySelector(".modal-field-hour").innerHTML = `${fieldHour}`;
+        node.querySelector(".modal-study-content").innerHTML = `${content}`;
+        frag.appendChild(node);
+      }
+      studyLogsList.appendChild(frag);
     });
 }
 
 // モーダルウィンドウの設定
-const studyLogsList = document.getElementById('study-logs-list');
+const studyLogsList = document.getElementById("study-logs-list");
 const options = {
-    duration: 200,
-    easing: 'ease',
-    fill: 'forwards'
+  duration: 200,
+  easing: "ease",
+  fill: "forwards",
 };
 
 function openModal(modal, mask) {
-    modal.classList.add('is-open');
-    mask.classList.add('is-open');
-    modal.animate({ opacity: [0, 1] }, options);
-    mask.animate({ opacity: [0, 1] }, options);
+  modal.classList.add("is-open");
+  mask.classList.add("is-open");
+  modal.animate({ opacity: [0, 1] }, options);
+  mask.animate({ opacity: [0, 1] }, options);
 }
 
 function closeModal(modal, mask) {
-    modal.animate({ opacity: [1, 0] }, options).onfinish = () => {
-        modal.classList.remove('is-open');
-    };
-    mask.animate({ opacity: [1, 0] }, options).onfinish = () => {
-        mask.classList.remove('is-open');
-    };
+  modal.animate({ opacity: [1, 0] }, options).onfinish = () => {
+    modal.classList.remove("is-open");
+  };
+  mask.animate({ opacity: [1, 0] }, options).onfinish = () => {
+    mask.classList.remove("is-open");
+  };
 }
 
-studyLogsList.addEventListener('click', (e) => {
-    // 1)閉じる処理
-    const closeBtn = e.target.closest('.close');
-    if (closeBtn) {
-        const modalWrap = closeBtn.closest('.study-logs-modal');
-        const modal = modalWrap.querySelector('.modal-content');
-        const mask = modalWrap.querySelector('.mask');
-        closeModal(modal, mask);
-        return;
-    }
-    // 2)マスク除去処理
-    if (e.target.classList.contains('mask')) {
-        const modalWrap = e.target.closest('.study-logs-modal');
-        const modal = modalWrap.querySelector('.modal-content');
-        closeModal(modal, e.target);
-    }
-    // 3)開く処理
-    const openBtn = e.target.closest('.open');
-    if (openBtn) {
-        const card = openBtn.closest('.study-logs-join');
-        const modalWrap = card.querySelector('.study-logs-modal')
-        const modal = modalWrap.querySelector('.modal-content');
-        const mask = modalWrap.querySelector('.mask');
-        openModal(modal, mask);
-        return;
-    }
-})
-
+studyLogsList.addEventListener("click", (e) => {
+  // 1)閉じる処理
+  const closeBtn = e.target.closest(".close");
+  if (closeBtn) {
+    const modalWrap = closeBtn.closest(".study-logs-modal");
+    const modal = modalWrap.querySelector(".modal-content");
+    const mask = modalWrap.querySelector(".mask");
+    closeModal(modal, mask);
+    return;
+  }
+  // 2)マスク除去処理
+  if (e.target.classList.contains("mask")) {
+    const modalWrap = e.target.closest(".study-logs-modal");
+    const modal = modalWrap.querySelector(".modal-content");
+    closeModal(modal, e.target);
+  }
+  // 3)開く処理
+  const openBtn = e.target.closest(".open");
+  if (openBtn) {
+    const card = openBtn.closest(".study-logs-join");
+    const modalWrap = card.querySelector(".study-logs-modal");
+    const modal = modalWrap.querySelector(".modal-content");
+    const mask = modalWrap.querySelector(".mask");
+    openModal(modal, mask);
+    return;
+  }
+});
