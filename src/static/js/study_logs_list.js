@@ -26,14 +26,14 @@ function submitForm() {
     .then((data) => {
       const selectedDate = document.getElementById("selected_date");
       const [year, month] = data.selectedDate.split("-");
-      const today = new Date();
-      const dateString = today.toLocaleDateString(today);
       selectedDate.innerHTML = `<p>${year}年${month}月の学習履歴一覧</p>`;
 
+      // 年月から日数を取得する関数
       const totalDays = (year, month) => {
         const getDays = new Date(year, month, 0).getDate();
         return getDays;
       };
+
       const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
       const studyLogsList = document.getElementById("study-logs-list");
