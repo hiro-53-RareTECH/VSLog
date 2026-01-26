@@ -4,7 +4,7 @@
     max-width: 332px;
     height: auto;
     background-color: var(--contents-bg-color);
-    margin: 100px auto 100px auto;
+    margin: 50px auto 50px auto;
 }
 
 .auth-content {
@@ -62,7 +62,7 @@
     max-width: 332px;
     height: auto;
     background-color: var(--contents-bg-color);
-    margin: 100px auto 24px auto;
+    margin: 50px auto 24px auto;
 }
 
 .auth-href {
@@ -87,5 +87,5 @@
     max-width: 332px;
     height: auto;
     background-color: var(--contents-bg-color);
-    margin: 0px auto 100px auto;
+    margin: 0px auto 50px auto;
 }
