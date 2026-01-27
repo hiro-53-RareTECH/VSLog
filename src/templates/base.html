@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
@@ -64,17 +64,20 @@
         <div class="header-inner">
           {% if current_user.user_id %}
           <div class="header-logo">
-            <a href="{{ url_for('study.dashboard_view', user_id=current_user.user_id) }}"
+            <a
+              href="{{ url_for('study.dashboard_view', user_id=current_user.user_id) }}"
               ><img
                 src="{{ url_for('static', filename='image/logo.png') }}"
                 alt="ロゴ画像"
             /></a>
-            <a href="{{ url_for('study.dashboard_view', user_id=current_user.user_id) }}"
+            <a
+              href="{{ url_for('study.dashboard_view', user_id=current_user.user_id) }}"
               >VSLog</a
             >
           </div>
           <div class="header-nav">
-            <a href="{{ url_for('study.dashboard_view', user_id=current_user.user_id) }}"
+            <a
+              href="{{ url_for('study.dashboard_view', user_id=current_user.user_id) }}"
               >ホーム</a
             >
             <a
@@ -108,41 +111,53 @@
             <!-- 背景マスク -->
             <div class="modal-header-nav">
               <ul class="modal-header-content">
-                <li class="is-hover">
-                  <a
-                    href="{{ url_for('study.dashboard_view', user_id=current_user.user_id) }}"
-                    >ホーム</a
-                  >
-                </li>
-                <li class="is-hover">
-                  <a
-                    href="{{ url_for('study.study_logs_view', user_id=current_user.user_id) }}"
-                    >学習記録の登録・編集</a
-                  >
-                </li>
-                <li class="is-hover">
-                  <a
-                    href="{{ url_for('study.study_fields_view', user_id=current_user.user_id) }}"
-                    >学習分野の登録・編集</a
-                  >
-                </li>
-                <li class="is-hover">
-                  <a
-                    href="{{ url_for('study.study_logs_list_view', user_id=current_user.user_id) }}"
-                    >学習履歴の一覧</a
-                  >
-                </li>
-                <li class="is-hover">
-                  <a
-                    href="{{ url_for('profile.profile_edit_view', user_id=current_user.user_id) }}"
-                    >プロフィール</a
-                  >
-                </li>
-                <li>
-                  <form action="{{ url_for('auth.logout') }}" method="get">
-                    <button class="logout" type="submit">ログアウト</button>
-                  </form>
-                </li>
+                <div class="modal-menu">
+                  <li>Menu</li>
+                  <li>
+                    <button class="modal-btn" onclick="modalHeader(this)">
+                      ✕
+                    </button>
+                  </li>
+                </div>
+                <div class="modal-nav">
+                  <li>
+                    <a
+                      href="{{ url_for('study.dashboard_view', user_id=current_user.user_id) }}"
+                      >ホーム</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="{{ url_for('study.study_logs_view', user_id=current_user.user_id) }}"
+                      >学習記録の登録・編集</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="{{ url_for('study.study_fields_view', user_id=current_user.user_id) }}"
+                      >学習分野の登録・編集</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="{{ url_for('study.study_logs_list_view', user_id=current_user.user_id) }}"
+                      >学習履歴の一覧</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      href="{{ url_for('profile.profile_edit_view', user_id=current_user.user_id) }}"
+                      >プロフィール</a
+                    >
+                  </li>
+                  <li>
+                    <form action="{{ url_for('auth.logout') }}" method="get">
+                      <button class="logout logout-modal" type="submit">
+                        ログアウト
+                      </button>
+                    </form>
+                  </li>
+                </div>
               </ul>
             </div>
           </div>
@@ -173,17 +188,31 @@
             <!-- 背景マスク -->
             <div class="modal-header-nav">
               <ul class="modal-header-content">
-                <li class="is-hover">
-                  <a href="{{ url_for('auth.login_view') }}">ログイン画面はこちら</a>
-                </li>
-                <li class="is-hover">
-                  <a href="{{ url_for('auth.signup_view') }}">新規登録はこちら</a>
-                </li>
-                <li class="is-hover">
-                  <a href="{{ url_for('auth.password_reset_view') }}"
-                    >パスワードをお忘れの方はこちら</a
-                  >
-                </li>
+                <div class="modal-menu">
+                  <li>Menu</li>
+                  <li>
+                    <button class="modal-btn" onclick="modalHeader(this)">
+                      ✕
+                    </button>
+                  </li>
+                </div>
+                <div class="modal-nav">
+                  <li>
+                    <a href="{{ url_for('auth.login_view') }}"
+                      >ログイン画面はこちら</a
+                    >
+                  </li>
+                  <li>
+                    <a href="{{ url_for('auth.signup_view') }}"
+                      >新規登録はこちら</a
+                    >
+                  </li>
+                  <li>
+                    <a href="{{ url_for('auth.password_reset_view') }}"
+                      >パスワードをお忘れの方はこちら</a
+                    >
+                  </li>
+                </div>
               </ul>
             </div>
           </div>
