@@ -5,9 +5,10 @@ from flask import Flask
 from .config import Config
 from .extensions import db, migrate, login_manager
 
-def create_app(config_object=Config) -> Flask:
+def create_app(config_object=Config, *, load_env: bool = True) -> Flask:
     # .envファイルの読み込み（カレントディレクトリがルートである前提）
-    load_dotenv()
+    if load_dotenv:
+        load_dotenv()
     
     app = Flask(__name__)
     app.config.from_object(config_object)
