@@ -1,7 +1,7 @@
 import pytest
-from ..src import create_app
-from ..src.config import UnitTestingConfig
-from ..src.extensions import db
+from src import create_app
+from src.config import UnitTestingConfig
+from src.extensions import db
 
 @pytest.fixture()
 def app():

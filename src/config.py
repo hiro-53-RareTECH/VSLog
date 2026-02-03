@@ -18,7 +18,7 @@ class Config:
         f'@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}'
     )
 
-class TestConfig(Config):
+class UnitTestingConfig(Config):
     TESTING = True
     # テスト用DB名
     MYSQL_DATABASE = os.getenv('MYSQL_TEST_DATABASE', 'app_test')
@@ -27,7 +27,3 @@ class TestConfig(Config):
     f'@{Config.MYSQL_HOST}:{Config.MYSQL_PORT}/{MYSQL_DATABASE}'
     )
 
-class UnitTestingConfig(Config):
-    TESTING = True
-    # 単体テストはSOLiteを使用して高速化
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
