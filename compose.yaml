@@ -48,10 +48,11 @@ services:
     build:
       context: .
       dockerfile: docker/Flask/Dockerfile
-    # ローカルのsrc, migrationsをコンテナにバインドマウントする
+    # ローカルのsrc, migrations, testsをコンテナにバインドマウントする
     volumes:
       - ./src:/app/src
       - ./migrations:/app/migrations
+      - ./tests:/app/tests
     # ホストとコンテナのポート番号を指定
     ports:
       - "${FLASK_PORT}:5000"

@@ -17,3 +17,13 @@ class Config:
         f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}'
         f'@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}'
     )
+
+class UnitTestingConfig(Config):
+    TESTING = True
+    # テスト用DB名
+    MYSQL_DATABASE = os.getenv('MYSQL_TEST_DATABASE', 'app_test')
+    SQLALCHEMY_DATABASE_URI = (
+    f'mysql+pymysql://{Config.MYSQL_USER}:{Config.MYSQL_PASSWORD}'
+    f'@{Config.MYSQL_HOST}:{Config.MYSQL_PORT}/{MYSQL_DATABASE}'
+    )
+
