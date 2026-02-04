@@ -19,7 +19,7 @@ def create_app(config_object=Config, *, load_env: bool = True) -> Flask:
     login_manager.init_app(app)
 
     # 未認証のユーザーがリダイレクトされるビュー関数とメッセージを設定
-    login_manager.login_view = 'login_view'
+    login_manager.login_view = 'auth.login_view'
     login_manager.login_message = 'ログインが必要です。先にログインしてください。'
 
     @login_manager.user_loader
