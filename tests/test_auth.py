@@ -1,19 +1,51 @@
 import uuid
+import pytest
+from flask import url_for
 
-def test_protected_requires_login(client):
-    '''
-    未ログイン状態で保護されたページにアクセスしたとき、
-    ログイン画面へリダイレクト（302）されるか、あるいは拒否（401）されることを確認。
-    '''
-    # ログイン必須のURL
-    user_id = uuid.uuid4()
+'''
+未ログイン状態で保護されたページにアクセスしたとき、
+ログイン画面へリダイレクト（302）されるか、あるいは拒否（401）されることを確認。
+'''
 
-    protected_url = f'/dashboard/{user_id}'
+@pytest.fixture
+def user_id():
+    return uuid.uuid4()
 
-    res = client.get(protected_url, follow_redirects=False)
+@pytest.mark.parametrize('endpoint', [
+    'profile.profile_edit_view',
+    'profile.password_update_view',
+    'study.dashboard_view',
+    'study.study_fields_view',
+    'study.study_logs_list_view',
+    'study.study_logs_view',
+])
+def test_protected_get_requires_login(client, app, user_id, endpoint):
+    with app.test_request_context():
+        path = url_for(endpoint.strip(), user_id=user_id)
 
+    res = client.get(path, follow_redirects=False)
     assert res.status_code in (302, 401)
 
     if res.status_code == 302:
         location = res.headers.get('Location', '')
-        assert '/login' in location or 'login' in location
+        assert 'login' in location
+
+@pytest.mark.parametrize('endpoint', [
+    'profile.profile_edit_process',
+    'profile.password_update_process',
+    'study.study_fields_process',
+    'study.get_graph_stats',
+    'study.study_logs_list_process',
+    'study.study_logs_view',
+    'study.study_logs_process',
+])
+def test_protected_post_requires_login(client, app, user_id, endpoint):
+    with app.test_request_context():
+        path = url_for(endpoint.strip(), user_id=user_id)
+
+    res = client.post(path, follow_redirects=False)
+    assert res.status_code in (302, 401)
+
+    if res.status_code == 302:
+        location = res.headers.get('Location', '')
+        assert 'login' in location
