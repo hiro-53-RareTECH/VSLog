@@ -18,6 +18,7 @@ services:
     # ボリュームmysql_dataをコンテナの/var/lib/mysqlにボリュームマウントする
     volumes:
       - mysql_data:/var/lib/mysql
+      # - ./docker/MySQL/init.sql:/docker-entrypoint-initdb.d/init.sql
     # コンテナの環境変数を設定
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}

@@ -15,6 +15,7 @@ RUN apt-get update && \
 # カレントディレクトリのrequirements.txtをワーキングディレクトリ直下にコピー
 # 依存関係ファイルのみ先にコピー（キャッシュ効率化のため）
 COPY requirements.txt .
+COPY pytest.ini .
 
 # pipをアップデートして、Pythonのパッケージをインストール
 # ローカルの保存用ディレクトリ（キャッシュ）の影響を排除して、常に最新のパッケージをインストールしたいため、--no-cache-dirを採用
