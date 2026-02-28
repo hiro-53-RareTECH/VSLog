@@ -7,7 +7,7 @@ from .extensions import db, migrate, login_manager
 
 def create_app(config_object=Config, *, load_env: bool = True) -> Flask:
     # .envファイルの読み込み（カレントディレクトリがルートである前提）
-    if load_dotenv:
+    if load_env:
         load_dotenv()
     
     app = Flask(__name__)
