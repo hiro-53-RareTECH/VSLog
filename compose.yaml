@@ -65,6 +65,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    command: wait-for-it.sh db:3306 -- sh -c "flask db upgrade && flask run --host=0.0.0.0 --debug"
     # .envファイルから環境変数を読み込む
     env_file:
       - .env
