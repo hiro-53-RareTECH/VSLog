@@ -12,14 +12,16 @@ RUN apt-get update && \
     fonts-ipaexfont \
     && rm -rf /var/lib/apt/lists/*
 
+# wait-for-it.shをコンテナにコピー、実行権限を付与
+COPY ./docker/Flask/wait-for-it.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/wait-for-it.sh
+
 # カレントディレクトリのrequirements.txtをワーキングディレクトリ直下にコピー
 # 依存関係ファイルのみ先にコピー（キャッシュ効率化のため）
 COPY requirements.txt .
+COPY pytest.ini .
 
 # pipをアップデートして、Pythonのパッケージをインストール
 # ローカルの保存用ディレクトリ（キャッシュ）の影響を排除して、常に最新のパッケージをインストールしたいため、--no-cache-dirを採用
 RUN pip install -U pip && \
     pip install --no-cache-dir -r requirements.txt
-
-# Flaskコンテナの起動時コマンド
-ENTRYPOINT ["/bin/sh", "-c", "flask db upgrade && flask run --host=0.0.0.0 --debug"]

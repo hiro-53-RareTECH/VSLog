@@ -1,6 +1,6 @@
 # 長いコマンドを省略して打てるようにするための設定
 # PHONYはMakefileで独自コマンドを設定するための宣言
-.PHONY: up down build logs sh migrate mm csu db
+.PHONY: up down build logs sh migrate mm csu db test
 
 up:        ## 起動
 	docker compose up
@@ -15,4 +15,6 @@ sh:        ## Flaskコンテナのシェルに入る
 migrate:   ## マイグレーション実行
 	docker compose exec app flask db migrate
 db:		   ## MySQLコンテナに入る
+	docker compose exec -it db mysql -u appuser -p
+test:	   ## テスト用のMySQLデータベースに入る
 	docker compose exec -it db mysql -u testuser -p
