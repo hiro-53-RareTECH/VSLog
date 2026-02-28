@@ -2,6 +2,7 @@
 import os
 
 class Config:
+    TESTING = False
     # 共通設定
     SECRET_KEY = os.getenv('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -18,12 +19,18 @@ class Config:
         f'@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}'
     )
 
-class UnitTestingConfig(Config):
+class UnitTestingConfig:
     TESTING = True
-    # テスト用DB名
-    MYSQL_DATABASE = os.getenv('MYSQL_TEST_DATABASE', 'app_test')
+
+    # テスト用MySQL設定
+    MYSQL_USER = os.getenv("MYSQL_TEST_USER")
+    MYSQL_PASSWORD = os.getenv("MYSQL_TEST_PASSWORD")
+    MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
+    MYSQL_PORT = "3306"
+    MYSQL_DATABASE = os.getenv("MYSQL_TEST_DATABASE")
+
     SQLALCHEMY_DATABASE_URI = (
-    f'mysql+pymysql://{Config.MYSQL_USER}:{Config.MYSQL_PASSWORD}'
-    f'@{Config.MYSQL_HOST}:{Config.MYSQL_PORT}/{MYSQL_DATABASE}'
+    f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}'
+    f'@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}'
     )
 
