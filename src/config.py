@@ -19,7 +19,7 @@ class Config:
         f'@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}'
     )
 
-class UnitTestingConfig:
+class UnitTestingConfig(Config):
     TESTING = True
 
     # テスト用MySQL設定
