@@ -27,7 +27,7 @@ def test_signup_form(client, app):
         # パスワードの文字列8文字以上16文字以内
         ('testuser', 'sample@gmail.com', 'test', 'test', 'パスワードは8文字以上16文字以内で入力してください'),
 ))
-def test_signup_validate(client, app, username, email, password1, password2, message):
+def test_signup_validate(client, app, username, email, password1, password2, message, existing_user):
     with app.test_request_context():
         res = client.post(url_for('auth.signup_process'), data={
             'username': username,
