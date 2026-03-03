@@ -1,4 +1,3 @@
-import uuid
 import pytest
 from flask import url_for
 
@@ -6,10 +5,6 @@ from flask import url_for
 未ログイン状態で保護されたページにアクセスしたとき、
 ログイン画面へリダイレクト（302）されるか、あるいは拒否（401）されることを確認。
 '''
-
-@pytest.fixture
-def user_id():
-    return uuid.uuid4()
 
 @pytest.mark.parametrize('endpoint', [
     'profile.profile_edit_view',
@@ -31,13 +26,12 @@ def test_protected_get_requires_login(client, app, user_id, endpoint):
         assert 'login' in location
 
 @pytest.mark.parametrize('endpoint', [
-    'profile.profile_edit_process',
-    'profile.password_update_process',
-    'study.study_fields_process',
-    'study.get_graph_stats',
-    'study.study_logs_list_process',
+    'profile.profile_edit_view',
+    'profile.password_update_view',
+    'study.dashboard_view',
+    'study.study_fields_view',
+    'study.study_logs_list_view',
     'study.study_logs_view',
-    'study.study_logs_process',
 ])
 def test_protected_post_requires_login(client, app, user_id, endpoint):
     with app.test_request_context():
@@ -49,3 +43,5 @@ def test_protected_post_requires_login(client, app, user_id, endpoint):
     if res.status_code == 302:
         location = res.headers.get('Location', '')
         assert 'login' in location
+
+
