@@ -1,6 +1,7 @@
 import pytest
 from flask import url_for, request, session
 from src.models.users import User
+from src.extensions import db
 
 '''
 新規登録後にダッシュボードのURLへリダレクト（302）されるかどうか
@@ -21,14 +22,17 @@ def test_signup_form(client, app):
         # username空白
         ('', 'sample@gmail.com', 'test1234', 'test1234', 'ユーザー名、メールアドレス、パスワードのいずれかが空です'),
         # 既に登録されているemail
-        ('testuser', 'testemail@gmail.com', 'test1234', 'test1234', '既に登録されているメールアドレスです'),
+        ('testuser', 'register', 'test1234', 'test1234', '既に登録されているメールアドレスです'),
         # 異なるパスワード
         ('testuser', 'sample@gmail.com', 'test1234', '1234test', 'パスワードが一致しません'),
         # パスワードの文字列8文字以上16文字以内
         ('testuser', 'sample@gmail.com', 'test', 'test', 'パスワードは8文字以上16文字以内で入力してください'),
 ))
-def test_signup_validate(client, app, username, email, password1, password2, message, existing_user):
+def test_signup_validate(client, app, username, email, password1, password2, message, register_user_id):
     with app.test_request_context():
+        if email == 'register':
+            user = db.session.get(User, register_user_id)
+            email = user.email
         res = client.post(url_for('auth.signup_process'), data={
             'username': username,
             'email': email,

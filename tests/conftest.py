@@ -20,6 +20,20 @@ def client(app):
     return app.test_client()
 
 @pytest.fixture()
+def register_user_id(app):
+    with app.app_context():
+        user = User(
+            user_id=uuid.uuid4(),
+            username='register_user',
+            email='register@gmail.com',
+            password=hash_password('register1234'),
+        )
+        db.session.add(user)
+        db.session.commit()
+
+        return user.user_id
+
+@pytest.fixture()
 def existing_user(app):
     with app.app_context():
         user = User(
@@ -29,6 +43,6 @@ def existing_user(app):
             password=hash_password('test1234'),
         )
         db.session.add(user)
-        db.session.commit()
+        db.session.flush()
 
         return user
