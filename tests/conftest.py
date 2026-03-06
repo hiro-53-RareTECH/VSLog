@@ -4,7 +4,7 @@ from src import create_app
 from src.config import UnitTestingConfig
 from src.models.users import User
 from src.extensions import db
-from src.usecases.adapters import hash_password
+from src.usecases.adapters import hash_password, verify_password
 
 @pytest.fixture()
 def app():
@@ -30,6 +30,10 @@ def register_user_id(app):
         )
         db.session.add(user)
         db.session.commit()
+
+        print(user.password)
+        print(type(user.password))
+        print(verify_password(user.password, 'register1234'))
 
         return user.user_id
 
