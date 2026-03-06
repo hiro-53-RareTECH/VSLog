@@ -2,7 +2,6 @@ from flask_login import UserMixin
 from sqlalchemy import Column, String, DATETIME
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import functions
-from flask_bcrypt import generate_password_hash, check_password_hash
 
 from ..extensions import db
 
@@ -24,7 +23,7 @@ class User(UserMixin, db.Model):
         self.user_id = user_id
         self.username = username
         self.email = email
-        self.password = generate_password_hash(password)
+        self.password = password
     
     # get_idをオーバーライドして、login_user()を使用できるようにする
     def get_id(self):
