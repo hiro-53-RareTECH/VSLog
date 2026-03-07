@@ -31,10 +31,6 @@ def register_user_id(app):
         db.session.add(user)
         db.session.commit()
 
-        print(user.password)
-        print(type(user.password))
-        print(verify_password(user.password, 'register1234'))
-
         return user.user_id
 
 @pytest.fixture()
