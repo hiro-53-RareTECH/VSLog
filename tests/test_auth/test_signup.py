@@ -8,9 +8,9 @@ from src.extensions import db
 新規登録時のバリデーションが正常に行われるか
 '''
 
-def test_signup_form(client, app):
+def test_signup_form(client, app, common_test_password):
     with app.test_request_context():
-        form_data = {'username': 'testuser', 'email': 'testemail@gmail.com', 'password1': 'test1234', 'password2': 'test1234'}
+        form_data = {'username': 'testuser', 'email': 'testemail@gmail.com', 'password1': common_test_password, 'password2': common_test_password}
         res = client.post(url_for('auth.signup_process'), data=form_data)
         assert res.status_code == 302
 
@@ -20,11 +20,11 @@ def test_signup_form(client, app):
 
 @pytest.mark.parametrize(('username', 'email', 'password1', 'password2', 'message'), (
         # username空白
-        ('', 'sample@gmail.com', 'test1234', 'test1234', 'ユーザー名、メールアドレス、パスワードのいずれかが空です'),
+        ('', 'sample@gmail.com', 'register1234', 'register1234', 'ユーザー名、メールアドレス、パスワードのいずれかが空です'),
         # 既に登録されているemail
-        ('testuser', 'register', 'test1234', 'test1234', '既に登録されているメールアドレスです'),
+        ('testuser', 'register', 'register1234', 'register1234', '既に登録されているメールアドレスです'),
         # 異なるパスワード
-        ('testuser', 'sample@gmail.com', 'test1234', '1234test', 'パスワードが一致しません'),
+        ('testuser', 'sample@gmail.com', 'register1234', 'register4321', 'パスワードが一致しません'),
         # パスワードの文字列8文字以上16文字以内
         ('testuser', 'sample@gmail.com', 'test', 'test', 'パスワードは8文字以上16文字以内で入力してください'),
 ))
