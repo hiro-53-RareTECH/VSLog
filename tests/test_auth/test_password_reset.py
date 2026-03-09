@@ -9,10 +9,11 @@ from src.models.users import User
 
 def test_password_reset_process(client, app, register_user):
     with app.test_request_context():
-        form_data = {'email': register_user['email'], 'new_password1': 'new_test1234', 'new_password2': 'new_test1234'}
-        res = client.post(url_for('auth.password_reset_process'), data=form_data, follow_redirects=True)
-        assert res.status_code == 200
-        assert 'パスワード再設定が完了しました' in res.data.decode('utf-8')
+        url = url_for('auth.password_reset_process')
+    form_data = {'email': register_user['email'], 'new_password1': 'new_test1234', 'new_password2': 'new_test1234'}
+    res = client.post(url, data=form_data, follow_redirects=True)
+    assert res.status_code == 200
+    assert 'パスワード再設定が完了しました' in res.data.decode('utf-8')
 
 @pytest.mark.parametrize(('email', 'new_password1', 'new_password2', 'message'),(
         # 空のフォーム
@@ -26,10 +27,11 @@ def test_password_reset_process(client, app, register_user):
 ))
 def test_password_reset_validation(client, app, email, new_password1, new_password2, message, register_user):
     with app.test_request_context():
-        if email == 'register':
-            email = register_user['email']
-        form_data = {'email': email, 'new_password1': new_password1, 'new_password2': new_password2}
-        res = client.post(url_for('auth.password_reset_process'), data=form_data, follow_redirects=True)
+        url = url_for('auth.password_reset_process')
+    if email == 'register':
+        email = register_user['email']
+    form_data = {'email': email, 'new_password1': new_password1, 'new_password2': new_password2}
+    res = client.post(url, data=form_data, follow_redirects=True)
 
-        assert res.status_code == 200
-        assert message in res.data.decode('utf-8')
+    assert res.status_code == 200
+    assert message in res.data.decode('utf-8')
