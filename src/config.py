@@ -22,6 +22,9 @@ class Config:
 class UnitTestingConfig(Config):
     TESTING = True
 
+    # テスト用設定
+    SERVER_NAME = 'localhost'
+
     # テスト用MySQL設定
     MYSQL_USER = os.getenv("MYSQL_TEST_USER")
     MYSQL_PASSWORD = os.getenv("MYSQL_TEST_PASSWORD")

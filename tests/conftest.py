@@ -1,5 +1,6 @@
 import pytest
 import uuid
+from flask import url_for
 from src import create_app
 from src.config import UnitTestingConfig
 from src.models.users import User
@@ -20,29 +21,40 @@ def client(app):
     return app.test_client()
 
 @pytest.fixture()
-def register_user_id(app):
+def common_credentials():
+    common_user_id = uuid.uuid4()
+    common_username = 'register_user'
+    common_email = 'register@gmail.com'
+    common_password = 'register1234'
+    return {'user_id': common_user_id,
+            'username': common_username,
+            'email': common_email,
+            'password': common_password,
+            }
+
+@pytest.fixture()
+def register_user(app, common_credentials):
     with app.app_context():
         user = User(
-            user_id=uuid.uuid4(),
-            username='register_user',
-            email='register@gmail.com',
-            password=hash_password('register1234'),
+            user_id=common_credentials['user_id'],
+            username=common_credentials['username'],
+            email=common_credentials['email'],
+            password=hash_password(common_credentials['password']),
         )
         db.session.add(user)
         db.session.commit()
 
-        return user.user_id
+        return {'user_id': user.user_id,
+                'username': user.username,
+                'email': user.email,
+                'password': user.password,
+                }
 
 @pytest.fixture()
-def existing_user(app):
-    with app.app_context():
-        user = User(
-            user_id=uuid.uuid4(),
-            username='testuser',
-            email='testemail@gmail.com',
-            password=hash_password('test1234'),
-        )
-        db.session.add(user)
-        db.session.flush()
-
-        return user
+def auth_client(app, client, register_user, common_credentials):
+    with app.test_request_context():
+        url = url_for('auth.login_process')
+    form_data = {'email': register_user['email'], 'password': common_credentials['password']}
+    res = client.post(url, data=form_data, follow_redirects=True)
+    assert res.status_code == 200
+    return client

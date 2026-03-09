@@ -4,14 +4,18 @@ from .._result import Result
 from ..validators import is_valid_password
 from ..adapters import verify_password, hash_password
 from ...extensions import db
+from ...models.users import User
 
 def change_password_usecase(
     *,
-    user,
+    user_id,
     current_password: str,
     new_password1: str,
     new_password2: str,
 ) -> Result[None]:
+    
+    user = db.session.get(User, user_id)
+
     if current_password == "" or new_password1 == "" or new_password2 == "":
         return Result.failure("空のフォームがあります")
     if not verify_password(user.password, current_password):
@@ -27,7 +31,5 @@ def change_password_usecase(
     except Exception:
         db.session.rollback()
         raise
-    finally:
-        db.session.close()
 
     return Result.success()
