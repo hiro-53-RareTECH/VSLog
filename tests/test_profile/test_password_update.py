@@ -8,15 +8,16 @@ from src.extensions import db
 2.パスワード更新のためのPOSTを行い、リダイレクトされて、成功（result.ok）の場合、正常なメッセージが返ってくるか。また、失敗の場合（!result.ok）の場合、エラーメッセージが返ってくるか。
 '''
 
-def test_password_update_view(client, app, login_user):
+def test_password_update_view(app, auth_client, register_user):
     with app.test_request_context():
-        res = client.get(url_for('profile.password_update_view', user_id=login_user.user_id))
-        assert res.status_code == 200
+        url = url_for('profile.password_update_view', user_id=register_user['user_id'])
+    res = auth_client.get(url)
+    assert res.status_code == 200
 
-def test_password_update_process(client, app, login_user, common_test_password):
+def test_password_update_process(app, auth_client, register_user, common_credentials):
     with app.test_request_context():
-        form_data = {'current_password': common_test_password, 'new_password1': 'update_password', 'new_password2': 'update_password'}
-        res = client.post(url_for('profile.password_update_process', user_id=login_user.user_id), data=form_data, follow_redirects=True)
-        assert res.status_code == 200
-        print(res.data.decode('utf-8'))
-        assert 'パスワード変更が完了しました' in res.data.decode('utf-8')
+        url = url_for('profile.password_update_process', user_id=register_user['user_id'])
+    form_data = {'current_password': common_credentials['password'], 'new_password1': 'update_password', 'new_password2': 'update_password'}
+    res = auth_client.post(url, data=form_data, follow_redirects=True)
+    assert res.status_code == 200
+    assert 'パスワード変更が完了しました' in res.data.decode('utf-8')

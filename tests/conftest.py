@@ -51,9 +51,10 @@ def register_user(app, common_credentials):
                 }
 
 @pytest.fixture()
-def login_user(app, client, register_user_id, common_test_password):
+def auth_client(app, client, register_user, common_credentials):
     with app.test_request_context():
-        login_user = db.session.get(User, register_user_id)
-        form_data = {'email': login_user.email, 'password': common_test_password}
-        res = client.post(url_for('auth.login_process'), data=form_data, follow_redirects=True)
-        return login_user
+        url = url_for('auth.login_process')
+    form_data = {'email': register_user['email'], 'password': common_credentials['password']}
+    res = client.post(url, data=form_data, follow_redirects=True)
+    assert res.status_code == 200
+    return client
