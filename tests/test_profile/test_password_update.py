@@ -14,10 +14,24 @@ def test_password_update_view(app, auth_client, register_user):
     res = auth_client.get(url)
     assert res.status_code == 200
 
-def test_password_update_process(app, auth_client, register_user, common_credentials):
+@pytest.mark.parametrize(('current_password', 'new_password1', 'new_password2', 'message'), (
+        # いずれかが空白
+        ('register', '', 'update_password', '空のフォームがあります'),
+        # 現在のパスワードが正しくない
+        ('diff_password', 'update_password', 'update_password', '現在のパスワードが正しくありません'),
+        # 異なるパスワード
+        ('register', 'update_password', 'password_update', '新しいパスワードと新しいパスワード（確認用）が一致しません'),
+        # パスワードの文字列8文字以上16文字以内
+        ('register', 'test', 'test', 'パスワードは8文字以上16文字以内で入力してください'),
+        # 成功
+        ('register', 'update_password', 'update_password', 'パスワード変更が完了しました'),
+))
+def test_password_update_process(app, auth_client, register_user, common_credentials, current_password, new_password1, new_password2, message):
     with app.test_request_context():
         url = url_for('profile.password_update_process', user_id=register_user['user_id'])
-    form_data = {'current_password': common_credentials['password'], 'new_password1': 'update_password', 'new_password2': 'update_password'}
+    if current_password == 'register':
+        current_password = common_credentials['password']
+    form_data = {'current_password': current_password, 'new_password1': new_password1, 'new_password2': new_password2}
     res = auth_client.post(url, data=form_data, follow_redirects=True)
     assert res.status_code == 200
-    assert 'パスワード変更が完了しました' in res.data.decode('utf-8')
+    assert message in res.data.decode('utf-8')

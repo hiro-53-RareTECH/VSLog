@@ -31,8 +31,7 @@ def test_signup_form(client, app, common_credentials):
 def test_signup_validate(client, app, username, email, password1, password2, message, register_user):
     with app.test_request_context():
         if email == 'register':
-            user = db.session.get(User, register_user['user_id'])
-            email = user.email
+            email = register_user['email']
         res = client.post(url_for('auth.signup_process'), data={
             'username': username,
             'email': email,
