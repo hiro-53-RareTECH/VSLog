@@ -21,37 +21,34 @@ def client(app):
     return app.test_client()
 
 @pytest.fixture()
-def common_test_password():
-    common_test_password = 'register1234'
-    return common_test_password
+def common_credentials():
+    common_user_id = uuid.uuid4()
+    common_username = 'register_user'
+    common_email = 'register@gmail.com'
+    common_password = 'register1234'
+    return {'user_id': common_user_id,
+            'username': common_username,
+            'email': common_email,
+            'password': common_password,
+            }
 
 @pytest.fixture()
-def register_user_id(app, common_test_password):
+def register_user(app, common_credentials):
     with app.app_context():
         user = User(
-            user_id=uuid.uuid4(),
-            username='register_user',
-            email='register@gmail.com',
-            password=hash_password(common_test_password),
+            user_id=common_credentials['user_id'],
+            username=common_credentials['username'],
+            email=common_credentials['email'],
+            password=hash_password(common_credentials['password']),
         )
         db.session.add(user)
         db.session.commit()
 
-        return user.user_id
-
-@pytest.fixture()
-def existing_user(app, common_test_password):
-    with app.app_context():
-        user = User(
-            user_id=uuid.uuid4(),
-            username='testuser',
-            email='testemail@gmail.com',
-            password=hash_password(common_test_password),
-        )
-        db.session.add(user)
-        db.session.flush()
-
-        return user
+        return {'user_id': user.user_id,
+                'username': user.username,
+                'email': user.email,
+                'password': user.password,
+                }
 
 @pytest.fixture()
 def login_user(app, client, register_user_id, common_test_password):

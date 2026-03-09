@@ -1,5 +1,5 @@
 import pytest
-from flask import url_for, request, session
+from flask import url_for
 from src.models.users import User
 from src.extensions import db
 
@@ -8,9 +8,9 @@ from src.extensions import db
 新規登録時のバリデーションが正常に行われるか
 '''
 
-def test_signup_form(client, app, common_test_password):
+def test_signup_form(client, app, common_credentials):
     with app.test_request_context():
-        form_data = {'username': 'testuser', 'email': 'testemail@gmail.com', 'password1': common_test_password, 'password2': common_test_password}
+        form_data = {'username': 'testuser', 'email': 'testemail@gmail.com', 'password1': common_credentials['password'], 'password2': common_credentials['password']}
         res = client.post(url_for('auth.signup_process'), data=form_data)
         assert res.status_code == 302
 
@@ -28,10 +28,10 @@ def test_signup_form(client, app, common_test_password):
         # パスワードの文字列8文字以上16文字以内
         ('testuser', 'sample@gmail.com', 'test', 'test', 'パスワードは8文字以上16文字以内で入力してください'),
 ))
-def test_signup_validate(client, app, username, email, password1, password2, message, register_user_id):
+def test_signup_validate(client, app, username, email, password1, password2, message, register_user):
     with app.test_request_context():
         if email == 'register':
-            user = db.session.get(User, register_user_id)
+            user = db.session.get(User, register_user['user_id'])
             email = user.email
         res = client.post(url_for('auth.signup_process'), data={
             'username': username,
