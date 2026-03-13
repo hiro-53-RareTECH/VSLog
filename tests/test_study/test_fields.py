@@ -14,9 +14,14 @@ def test_study_fields_view(app, register_user, auth_client):
 
 @pytest.mark.parametrize(('fieldname[]', 'color_code[]', 'field_id[]', 'row_action[]', 'message'), (
         # 学習分野の重複エラー
-        ('', 'sample@gmail.com', 'register1234', 'register1234', 'ユーザー名、メールアドレス、パスワードのいずれかが空です'),
+        ('Docker', '#000000', '', 'new', f'{fieldname}は既に登録されています'),
         # 登録（成功）
-        ('Python', 'sample@gmail.com', '', 'new', '学習分野の更新に成功しました'),
+        ('Python', '#000000', '', 'new', '学習分野の更新に成功しました'),
+        # 編集（成功）
+        ('Python', '#000000', '', 'update', '学習分野の更新に成功しました'),
+        # 削除（成功）
+        ('Python', '#000000', '', 'delete', '学習分野の更新に成功しました'),
+
 ))
 def test_study_fields_process(app, register_user, auth_client):
     with app.test_request_context():

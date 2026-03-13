@@ -19,5 +19,4 @@ def study_fields_process(user_id: str):
     if user_id != str(current_user.user_id):
         return jsonify({'error': 'forbidden'}), 403
     upsert_fields_bulk_usecase(user_id=user_id, form=request.form)
-    print(request.form)
     return redirect(url_for('study.study_fields_view', user_id=user_id))
