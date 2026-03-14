@@ -32,7 +32,7 @@ def upsert_fields_bulk_usecase(user_id: str, form) -> None:
             
             # 編集
             elif row_action == 'update' and fieldname.strip() and field_id:
-                field = Field.query.get(field_id)
+                field = db.session.get(Field, field_id)
                 if field and user_id == user_id:
                     field.fieldname = fieldname
                     field.color_code = color_code
@@ -40,7 +40,7 @@ def upsert_fields_bulk_usecase(user_id: str, form) -> None:
             
             # 削除
             elif row_action == 'delete' and field_id:
-                field = Field.query.get(field_id)
+                field = db.session.get(Field, field_id)
                 if field and user_id == user_id:
                     db.session.delete(field)
                     is_registered = True

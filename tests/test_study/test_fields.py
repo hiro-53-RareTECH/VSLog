@@ -18,7 +18,7 @@ def test_study_fields_view(app, register_user, auth_client):
         # 登録（成功）
         ('Python', '#000000', '', 'new', '学習分野の更新に成功しました'),
         # 編集（成功）
-        ('Docker', '#000000', 1, 'update', '学習分野の更新に成功しました'),
+        ('React', '#000000', 1, 'update', '学習分野の更新に成功しました'),
         # 削除（成功）
         ('Docker', '#000000', 1, 'delete', '学習分野の更新に成功しました'),
 ))
