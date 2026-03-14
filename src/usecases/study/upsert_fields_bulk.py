@@ -9,6 +9,7 @@ def upsert_fields_bulk_usecase(user_id: str, form) -> None:
     color_codes = form.getlist('color_code[]')
     field_ids = form.getlist('field_id[]')
     row_actions = form.getlist('row_action[]')
+    print(fieldnames, color_codes, field_ids, row_actions)
 
     is_registered = False
     db_fields = Field.get_fields_all(user_id)
@@ -31,7 +32,7 @@ def upsert_fields_bulk_usecase(user_id: str, form) -> None:
             
             # 編集
             elif row_action == 'update' and fieldname.strip() and field_id:
-                field = Field.query.get(field_id)
+                field = db.session.get(Field, field_id)
                 if field and user_id == user_id:
                     field.fieldname = fieldname
                     field.color_code = color_code
@@ -39,7 +40,7 @@ def upsert_fields_bulk_usecase(user_id: str, form) -> None:
             
             # 削除
             elif row_action == 'delete' and field_id:
-                field = Field.query.get(field_id)
+                field = db.session.get(Field, field_id)
                 if field and user_id == user_id:
                     db.session.delete(field)
                     is_registered = True
@@ -55,6 +56,4 @@ def upsert_fields_bulk_usecase(user_id: str, form) -> None:
     except Exception:
         db.session.rollback()
         flash('予期しないエラーが発生しました', 'エラー')
-    
-    finally:
-        db.session.close()
+
