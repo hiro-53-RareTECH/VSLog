@@ -43,7 +43,7 @@ def upsert_logs_bulk_usecase(*, user_id: str, form) -> dict:
             
             # 編集
             elif row_action == 'update' and study_log_id:
-                study_log = StudyLog.query.get(study_log_id)
+                study_log = db.session.get(StudyLog, study_log_id)
                 if study_log and study_log.user_id == user_id:
                     study_log.field_id = Field.get_field_id(user_id, fieldname)
                     study_log.study_date = study_date_obj
@@ -53,10 +53,13 @@ def upsert_logs_bulk_usecase(*, user_id: str, form) -> dict:
             
             # 削除
             elif row_action == 'delete' and study_log_id:
-                study_log = StudyLog.query.get(study_log_id)
+                study_log = db.session.get(StudyLog, study_log_id)
                 if study_log and study_log.user_id == user_id:
                     db.session.delete(study_log)
                     is_registered = True
+            
+            elif study_date_obj is None:
+                flash('学習日を選択してください', 'エラー')
         
         db.session.commit()
         if is_registered:
@@ -70,7 +73,7 @@ def upsert_logs_bulk_usecase(*, user_id: str, form) -> dict:
         db.session.rollback()
         flash('予期しないエラーが発生しました', 'エラー')
     
-    finally:
-        db.session.close()
+    # finally:
+        # db.session.close()
     
     return {'selected_date': selected_date}
