@@ -73,7 +73,4 @@ def upsert_logs_bulk_usecase(*, user_id: str, form) -> dict:
         db.session.rollback()
         flash('予期しないエラーが発生しました', 'エラー')
     
-    # finally:
-        # db.session.close()
-    
     return {'selected_date': selected_date}
