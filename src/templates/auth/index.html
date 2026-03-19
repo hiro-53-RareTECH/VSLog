@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block head_link %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/auth.css') }}"
+/>
+{% endblock %} {% block title %} スタート画面 {% endblock %} {% block content %}
+<div class="main-container">
+  <div class="auth-inner">
+    <div class="auth-explain">
+      <a href="{{ url_for('auth.login_view') }}"
+        ><img
+          src="{{ url_for('static', filename='image/logo.png') }}"
+          alt="ロゴ画像"
+          width="200px"
+          height="200px"
+      /></a>
+      <h1>VSLog</h1>
+      <p>学習記録を可視化するアプリ</p>
+    </div>
+    <div class="auth-content">
+      <a href="{{ url_for('auth.signup_view') }}"><button>新規登録</button></a>
+      <a href="{{ url_for('auth.login_view') }}"><button>ログイン</button></a>
+      <a href="{{ url_for('auth.password_reset_view') }}"
+        ><button>パスワード再設定</button></a
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}
