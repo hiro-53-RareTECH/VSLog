@@ -1,6 +1,6 @@
 # アプリファクトリ
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, render_template
 
 from .config import Config
 from .extensions import db, migrate, login_manager
@@ -34,10 +34,16 @@ def create_app(config_object=Config, *, load_env: bool = True) -> Flask:
     from .blueprints.auth import auth_bp
     from .blueprints.profile import profile_bp
     from .blueprints.study import study_bp
+    from .blueprints.error import error_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(study_bp)
+    app.register_blueprint(error_bp)
+
+    # 404エラー時の処理
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template('error/404.html'), 404
 
     return app
-

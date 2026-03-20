@@ -10,7 +10,7 @@ from ..import study_bp
 @login_required
 def dashboard_view(user_id: str):
     if user_id != str(current_user.user_id):
-        return jsonify({'error': 'forbidden'}), 403
+        return render_template('error/403.html'), 403
     this_year = datetime.now().year
     this_month = datetime.now().month
 
