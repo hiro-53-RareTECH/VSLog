@@ -1,6 +1,6 @@
 from datetime import date
 
-from flask import jsonify, redirect, render_template, request, url_for
+from flask import jsonify, redirect, render_template, request, url_for, abort
 from flask_login import login_required, current_user
 
 from .. import study_bp
@@ -12,7 +12,7 @@ from ....usecases.study.upsert_logs_bulk import upsert_logs_bulk_usecase
 @login_required
 def study_logs_view(user_id: str):
     if user_id != str(current_user.user_id):
-        return jsonify({'error': 'forbidden'}), 403
+        abort(403)
     
     if request.method == 'GET':
         today = date.today().strftime('%Y-%m-%d')

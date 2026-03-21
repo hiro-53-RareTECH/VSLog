@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from flask import request, render_template, redirect, url_for, flash, jsonify
+from flask import request, render_template, redirect, url_for, flash, jsonify, abort
 from flask_login import login_required, current_user
 
 from .. import profile_bp
@@ -11,7 +11,7 @@ from ....usecases.profile.change_password import change_password_usecase
 @login_required
 def password_update_view(user_id: str):
     if user_id != str(current_user.user_id):
-        return jsonify({'error': 'forbidden'}), 403
+        abort(403)
     return render_template("profile/password_update.html")
 
 
