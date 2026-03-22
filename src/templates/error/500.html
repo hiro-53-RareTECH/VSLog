@@ -1,27 +1,18 @@
 {% extends "base.html" %} {% block head_link %}
 <link
   rel="stylesheet"
-  href="{{ url_for('static', filename='css/auth.css') }}"
+  href="{{ url_for('static', filename='css/error.css') }}"
 />
-{% endblock %} {% block title %} スタート画面 {% endblock %} {% block content %}
+{% endblock %} {% block title %} 500エラー {% endblock %} {% block content %}
 <div class="main-container">
-  <div class="auth-inner">
-    <div class="auth-explain">
-      <a href="{{ url_for('auth.login_view') }}"
-        ><img
-          src="{{ url_for('static', filename='image/logo.png') }}"
-          alt="ロゴ画像"
-          width="200px"
-          height="200px"
-      /></a>
-      <h1>VSLog</h1>
-      <p>学習記録を可視化するアプリ</p>
-    </div>
-    <div class="auth-content">
-      <a href="{{ url_for('auth.signup_view') }}"><button>新規登録</button></a>
-      <a href="{{ url_for('auth.login_view') }}"><button>ログイン</button></a>
-      <a href="{{ url_for('auth.password_reset_view') }}"
-        ><button>パスワード再設定</button></a
+  <div class="error-inner">
+    <h1>500<br />Internal Server Error</h1>
+    <div class="error-content">
+      <p>指定されたページが見つかりません。</p>
+      <p>申し訳ございません。サーバー内で一時的なエラーが発生しました。</p>
+      <p>数分ほど時間をおいてから、再度アクセスしてください。</p>
+      <a href="{{ url_for('auth.index_view') }}"
+        ><button>トップページへ</button></a
       >
     </div>
   </div>
