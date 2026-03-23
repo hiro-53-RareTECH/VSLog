@@ -48,11 +48,6 @@ def create_app(config_object=Config, *, load_env: bool = True) -> Flask:
     def forbidden_error(e):
         return render_template('error/403.html'), 403
 
-    @app.route('/error')
-    def trigger_error():
-    # 500 Internal Server Error を強制発生
-        abort(500)
-    
     @app.errorhandler(500)
     def internal_server_error(e):
         return render_template('error/500.html'), 500
