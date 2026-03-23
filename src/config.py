@@ -24,6 +24,7 @@ class UnitTestingConfig(Config):
 
     # テスト用設定
     SERVER_NAME = 'localhost'
+    PROPAGATE_EXCEPTIONS = False
 
     # テスト用MySQL設定
     MYSQL_USER = os.getenv("MYSQL_TEST_USER")
