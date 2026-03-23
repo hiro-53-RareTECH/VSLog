@@ -1,6 +1,6 @@
 # アプリファクトリ
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, render_template, abort
 
 from .config import Config
 from .extensions import db, migrate, login_manager
@@ -39,5 +39,22 @@ def create_app(config_object=Config, *, load_env: bool = True) -> Flask:
     app.register_blueprint(profile_bp)
     app.register_blueprint(study_bp)
 
-    return app
+    # エラー時の処理
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template('error/404.html'), 404
+    
+    @app.errorhandler(403)
+    def forbidden_error(e):
+        return render_template('error/403.html'), 403
 
+    @app.route('/error')
+    def trigger_error():
+    # 500 Internal Server Error を強制発生
+        abort(500)
+    
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return render_template('error/500.html'), 500
+
+    return app

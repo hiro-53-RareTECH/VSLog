@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import jsonify, request, abort
 from flask_login import login_required, current_user
 
 from .. import study_bp
@@ -9,7 +9,7 @@ from ....usecases.study.get_graph_stats import get_graph_stats_usecase
 @login_required
 def get_graph_stats(user_id :str):
     if user_id != str(current_user.user_id):
-        return jsonify({'error': 'forbidden'}), 403
+        abort(403)
     
     data = request.get_json(silent=True) or {}
     graph_stats_result = get_graph_stats_usecase(
