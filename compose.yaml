@@ -28,7 +28,7 @@ services:
       - TZ=Asia/Tokyo
     # .envファイルから環境変数を読み込む
     env_file:
-      - .env
+      - .env.dev
     healthcheck:
       # mysqladmin(MySQLの管理を行うクライアントを使ってDBコンテナ自身（localhost:127.0.0.1)にpingを送ってヘルスチェックを行う)
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u${MYSQL_USER} -p${MYSQL_PASSWORD}"]
@@ -68,7 +68,7 @@ services:
     command: wait-for-it.sh db:3306 -- sh -c "flask db upgrade && flask run --host=0.0.0.0 --debug"
     # .envファイルから環境変数を読み込む
     env_file:
-      - .env
+      - .env.dev
 
 volumes:
   mysql_data:

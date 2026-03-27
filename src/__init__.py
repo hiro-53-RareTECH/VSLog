@@ -1,15 +1,10 @@
 # アプリファクトリ
-from dotenv import load_dotenv
-from flask import Flask, render_template, abort
+from flask import Flask, render_template
 
-from .config import Config
+from .config import Config, DevelopmentConfig
 from .extensions import db, migrate, login_manager
 
-def create_app(config_object=Config, *, load_env: bool = True) -> Flask:
-    # .envファイルの読み込み（カレントディレクトリがルートである前提）
-    if load_env:
-        load_dotenv()
-    
+def create_app(config_object=DevelopmentConfig) -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_object)
 
