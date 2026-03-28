@@ -1,7 +1,7 @@
 # アプリファクトリ
 from flask import Flask, render_template
 
-from .config import Config, DevelopmentConfig
+from .config import DevelopmentConfig
 from .extensions import db, migrate, login_manager
 
 def create_app(config_object=DevelopmentConfig) -> Flask:
