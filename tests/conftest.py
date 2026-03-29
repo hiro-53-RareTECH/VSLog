@@ -9,7 +9,7 @@ from src.usecases.adapters import hash_password
 
 @pytest.fixture()
 def app():
-    app = create_app(UnitTestingConfig, load_env=False)
+    app = create_app(UnitTestingConfig)
     with app.app_context():
         db.create_all()
         yield app

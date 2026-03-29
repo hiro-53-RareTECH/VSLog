@@ -2,11 +2,12 @@
 import os
 
 class Config:
-    TESTING = False
     # 共通設定
+    TESTING = False
     SECRET_KEY = os.getenv('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+class DevelopmentConfig(Config):
     # MySQL設定
     MYSQL_USER = os.getenv("MYSQL_USER")
     MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
@@ -17,6 +18,22 @@ class Config:
     SQLALCHEMY_DATABASE_URI = (
         f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}'
         f'@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}'
+    )
+
+class ProductionConfig(Config):
+    # 本番用Flask設定
+    SESSION_COOKIE_SECURE = True
+    SERVER_NAME = "onrender.com"
+
+    # PostgreSQL設定
+    POSTGRESQL_USER = os.getenv("POSTGRESQL_USER")
+    POSTGRESQL_PASSWORD = os.getenv("POSTGRESQL_PASSWORD")
+    POSTGRESQL_HOST = os.getenv("POSTGRESQL_HOST")
+    POSTGRESQL_DATABASE = os.getenv("POSTGRESQL_DATABASE")
+
+    SQLALCHEMY_DATABASE_URI = (
+        f'postgresql://{POSTGRESQL_USER}:{POSTGRESQL_PASSWORD}'
+        f'@{POSTGRESQL_HOST}/{POSTGRESQL_DATABASE}'
     )
 
 class UnitTestingConfig(Config):

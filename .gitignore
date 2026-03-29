@@ -1,5 +1,7 @@
 # Environments
 .env
+.env.prod
+.env.dev
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
