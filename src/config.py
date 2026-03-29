@@ -21,6 +21,10 @@ class DevelopmentConfig(Config):
     )
 
 class ProductionConfig(Config):
+    # 本番用Flask設定
+    SESSION_COOKIE_SECURE = True
+    SERVER_NAME = "onrender.com"
+
     # PostgreSQL設定
     POSTGRESQL_USER = os.getenv("POSTGRESQL_USER")
     POSTGRESQL_PASSWORD = os.getenv("POSTGRESQL_PASSWORD")
