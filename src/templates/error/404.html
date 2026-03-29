@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block head_link %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/error.css') }}"
+/>
+{% endblock %} {% block title %} 404エラー {% endblock %} {% block content %}
+<div class="main-container">
+  <div class="error-inner">
+    <h1>404<br/>Page Not Found</h1>
+    <div class="error-content">
+      <p>指定されたページが見つかりません。</p>
+      <p>
+        一時的にアクセスできない状況にあるか、<br />移動もしくは削除された可能性があります。
+      </p>
+      <a href="{{ url_for('auth.index_view') }}"
+        ><button>トップページへ</button></a
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}

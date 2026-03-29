@@ -1,0 +1,40 @@
+from __future__ import annotations
+
+from flask import request, render_template, redirect, url_for, flash, jsonify, abort
+from flask_login import login_required, current_user
+
+from .. import profile_bp
+from ....usecases.profile.change_password import change_password_usecase
+
+
+@profile_bp.route("/password-update/<user_id>", methods=["GET"])
+@login_required
+def password_update_view(user_id: str):
+    if user_id != str(current_user.user_id):
+        abort(403)
+    return render_template("profile/password_update.html")
+
+
+@profile_bp.route("/password-update/<user_id>", methods=["POST"])
+@login_required
+def password_update_process(user_id: str):
+    if user_id != str(current_user.user_id):
+        return jsonify({'error': 'forbidden'}), 403
+
+    current_password = request.form.get("current_password", "")
+    new_password1 = request.form.get("new_password1", "")
+    new_password2 = request.form.get("new_password2", "")
+
+    result = change_password_usecase(
+        user_id=current_user.user_id,
+        current_password=current_password,
+        new_password1=new_password1,
+        new_password2=new_password2,
+    )
+
+    if not result.ok:
+        flash(result.message, "エラー")
+        return redirect(url_for("profile.password_update_view", user_id=user_id))
+
+    flash("パスワード変更が完了しました", "正常")
+    return redirect(url_for("profile.password_update_view", user_id=user_id))

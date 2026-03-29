@@ -1,0 +1,50 @@
+/* ボタン、テーブル等の各共通コンポーネント（部品）の定義 */
+button {
+    padding: 10px 20px;
+    background-color: var(--main-color);
+    color: var(--contents-bg-color);
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.logout {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+table, th, td {
+    border: 1px solid var(--base-text-color);
+}
+
+table {
+    background-color: var(--contents-bg-color);
+}
+
+th {
+    font-weight: bold;
+}
+
+.table-num {
+    text-align: center;
+}
+
+.delete-button {
+    padding: 10px 10px;
+    background-color: var(--contents-bg-color);
+    color: var(--base-text-color);
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.delete-button:hover {
+    background-color: var(--hover-color);
+    opacity: 0.8;
+}

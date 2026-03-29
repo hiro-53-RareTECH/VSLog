@@ -5,3 +5,12 @@
 # README.mdを除外
 README.md
 
+# .envを除外
+.env
+.env.example
+.env.prod
+.env.dev
+
+# Makefileを除外
+Makefile
+

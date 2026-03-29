@@ -1,0 +1,130 @@
+{% extends "base.html" %} {% block head_link %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/study.css') }}"
+/>
+<script
+  src="{{ url_for('static', filename='js/study_logs.js') }}"
+  defer
+></script>
+{% endblock %} {% block title %} 学習記録の登録・編集 {% endblock %} {% block
+content %}
+<div class="main-container">
+  <div class="study-inner">
+    <div class="study-head">
+      <h1>学習記録の登録・編集</h1>
+    </div>
+    <!-- 画面表示時のフォーム -->
+    <div class="study-date-view">
+      <div class="study-date">
+        <p>{{ selected_date }}の学習記録</p>
+      </div>
+      <div class="study-date">
+        <form
+          action="{{ url_for('study.study_logs_view', user_id=current_user.user_id) }}"
+          method="post"
+          id="study-date-form"
+        >
+          <label for="study_date">日付：</label>
+          <input
+            type="date"
+            name="study_date"
+            id="study_date"
+            value="{{ selected_date }}"
+          />
+        </form>
+      </div>
+    </div>
+
+    <!-- 学習分野のプルダウンリスト設定 -->
+    <datalist id="field_list">
+      {% for field in current_user.fields %}
+      <option value="{{ field.fieldname }}"></option>
+      {% endfor %}
+    </datalist>
+
+    <!-- 学習記録登録・編集時のフォーム -->
+    <div class="study-form">
+      <form
+        class="study_logs_process"
+        id="study_logs_process"
+        action="{{ url_for('study.study_logs_process', user_id=current_user.user_id) }}"
+        method="post"
+        name="study_logs_process"
+      >
+        <div class="study-table-container">
+          <table class="study-logs" id="study-logs">
+            <thead>
+              <tr class="study-tr logs">
+                <th class="th-num">No.</th>
+                <th class="th-hour">学習時間</th>
+                <th class="th-fieldname">分野名</th>
+                <th class="th-content">内容</th>
+                <th class="th-delete">削除</th>
+              </tr>
+            </thead>
+            <!-- 以下のtbodyにDOM操作でtemplateが挿入される -->
+            <tbody></tbody>
+            <template id="study-logs-template">
+              <tr class="study-tr logs">
+                <td class="table-num"></td>
+                <td class="table-hour">
+                  <div class="hm">
+                    <input
+                      type="number"
+                      class="hm-hour"
+                      min="0"
+                      max="24"
+                      step="1"
+                      inputmode="numeric"
+                    />時間
+                    <input
+                      type="number"
+                      class="hm-minute"
+                      min="0"
+                      max="59"
+                      step="1"
+                      inputmode="numeric"
+                    />分
+                  </div>
+                  <!-- 以下のinputで入力したhourをJSで一つにまとめて送信 -->
+                  <input type="hidden" name="hours[]" class="hm-total" />
+                </td>
+                <td class="table-fieldname">
+                  <input
+                    type="text"
+                    name="fieldnames[]"
+                    value=""
+                    list="field_list"
+                  />
+                </td>
+                <td class="table-content">
+                  <textarea name="contents[]" rows="" cols=""></textarea>
+                </td>
+                <td class="table-delete">
+                  <input type="hidden" name="study_dates[]" value="" />
+                  <input type="hidden" name="study_log_ids[]" value="" />
+                  <input type="hidden" name="row_actions[]" value="" />
+                  <button
+                    class="delete-button"
+                    type="button"
+                    onclick="removeRow(this)"
+                  >
+                    🗑️
+                  </button>
+                </td>
+              </tr>
+            </template>
+          </table>
+        </div>
+        <div class="study-button">
+          <button type="submit">更新</button>
+          <button type="button" onclick="addRowLogs(this)">
+            記入欄を追加する
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

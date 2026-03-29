@@ -1,0 +1,112 @@
+/* ホーム画面(dashboard.htmlのcss） */
+select {
+    border-radius: 24px;
+    border: 1px solid;
+    border-color: var(--base-text-color);
+    padding: 6px;
+}
+
+.home-inner {
+    max-width: 1120px;
+    width: 100%;
+    height: auto;
+    margin: 50px auto 50px auto;
+}
+
+.home-head {
+    margin-bottom: 24px;
+}
+
+.home-head h1 {
+    text-align: center;
+    font-size: 24px;
+}
+
+.home-display-wrap {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4分割のグリッドを用意 */
+    gap: 24px;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.home-display {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--contents-bg-color);
+    flex: 1;
+    gap: 12px;
+    padding: 16px;
+}
+
+.home-display-period {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.home-display-add {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.home-stats-wrap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3分割のグリッドを用意 */
+    gap: 24px;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.home-stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    background-color: var(--contents-bg-color);
+    flex: 1;
+    width: 100%;
+    padding: 16px;
+}
+
+.home-stats img {
+    width: 100px;
+    height: 100px;
+}
+
+.home-stats-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.home-stats-area p {
+    text-align: center;
+}
+
+.home-stats-area section p {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.home-graph {
+    background-color: var(--contents-bg-color);
+    text-align: center;
+    overflow-x: scroll;
+    width: 100%;
+    padding: 16px;
+}
+
+.home-graph-data {
+    max-width: 960px;
+    width: 85vw;
+    height: 100%;
+}
+
+.hidden {
+    display: none;
+}

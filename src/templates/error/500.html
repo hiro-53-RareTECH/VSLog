@@ -1,0 +1,20 @@
+{% extends "base.html" %} {% block head_link %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/error.css') }}"
+/>
+{% endblock %} {% block title %} 500エラー {% endblock %} {% block content %}
+<div class="main-container">
+  <div class="error-inner">
+    <h1>500<br />Internal Server Error</h1>
+    <div class="error-content">
+      <p>指定されたページが見つかりません。</p>
+      <p>申し訳ございません。サーバー内で一時的なエラーが発生しました。</p>
+      <p>数分ほど時間をおいてから、再度アクセスしてください。</p>
+      <a href="{{ url_for('auth.index_view') }}"
+        ><button>トップページへ</button></a
+      >
+    </div>
+  </div>
+</div>
+{% endblock %}
