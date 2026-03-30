@@ -26,6 +26,7 @@ class ProductionConfig(Config):
     SERVER_NAME = "https://vslog.onrender.com"
 
     # PostgreSQL設定
+    DATABASE_URL = os.getenv("DATABASE_URL")
     POSTGRESQL_USER = os.getenv("POSTGRESQL_USER")
     POSTGRESQL_PASSWORD = os.getenv("POSTGRESQL_PASSWORD")
     POSTGRESQL_HOST = os.getenv("POSTGRESQL_HOST")
