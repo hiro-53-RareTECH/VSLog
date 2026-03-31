@@ -9,7 +9,7 @@ class Field(db.Model):
 
     field_id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(String(36), ForeignKey('users.user_id'), nullable=False)
-    fieldname = Column(String(20), nullable=False)
+    fieldname = Column(String(20, collation='utf8mb4_general_ci'), nullable=False)
     color_code = Column(String(7), nullable=False)
     created_at = Column(DATETIME, nullable=False, server_default=functions.current_timestamp())
 
