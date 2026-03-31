@@ -1,8 +1,8 @@
-"""Initial migrate postgresql
+"""Initial Migrate PostgreSQL
 
-Revision ID: 04d960751856
+Revision ID: 1c63abc0712b
 Revises: 
-Create Date: 2026-03-31 17:31:08.306278
+Create Date: 2026-03-31 19:22:21.188493
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '04d960751856'
+revision = '1c63abc0712b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,7 +23,7 @@ def upgrade():
     sa.Column('username', sa.String(length=255), nullable=False),
     sa.Column('email', sa.String(length=255), nullable=False),
     sa.Column('password', sa.String(length=255), nullable=False),
-    sa.Column('created_at', sa.DATETIME(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.PrimaryKeyConstraint('user_id'),
     sa.UniqueConstraint('email')
     )
@@ -32,7 +32,7 @@ def upgrade():
     sa.Column('user_id', sa.String(length=36), nullable=False),
     sa.Column('fieldname', sa.String(length=20), nullable=False),
     sa.Column('color_code', sa.String(length=7), nullable=False),
-    sa.Column('created_at', sa.DATETIME(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.user_id'], ),
     sa.PrimaryKeyConstraint('field_id')
     )
