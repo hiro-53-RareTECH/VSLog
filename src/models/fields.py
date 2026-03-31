@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, DATETIME
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import functions
 
@@ -11,7 +11,7 @@ class Field(db.Model):
     user_id = Column(String(36), ForeignKey('users.user_id'), nullable=False)
     fieldname = Column(String(20), nullable=False)
     color_code = Column(String(7), nullable=False)
-    created_at = Column(DateTime, nullable=False, server_default=functions.current_timestamp())
+    created_at = Column(DATETIME, nullable=False, server_default=functions.current_timestamp())
 
     # users,study_logsに紐づけし、双方向でアクセス
     # study_logsとはcascade設定をし、fieldが削除されれば、関連するstudy_logsも削除するよう設定
