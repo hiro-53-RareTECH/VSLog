@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-from sqlalchemy import Column, String, DATETIME
+from sqlalchemy import Column, String, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import functions
 
@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     username = Column(String(255), nullable=False)
     email = Column(String(255), unique=True, nullable=False)
     password = Column(String(255), nullable=False)
-    created_at = Column(DATETIME, nullable=False, server_default=functions.current_timestamp())
+    created_at = Column(DateTime, nullable=False, server_default=functions.current_timestamp())
 
     # fields,study_logsに紐づけし、双方向でアクセス
     fields = relationship('Field', back_populates='users')
