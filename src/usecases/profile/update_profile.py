@@ -14,7 +14,7 @@ def update_profile_usecase(*, user_id, new_username: str, new_email: str) -> Res
         return Result.failure("空のフォームがあります")
     if not is_valid_email(new_email):
         return Result.failure("メールアドレスの形式になっていません")
-    if get_by_email(new_email) is not None:
+    if new_email != user.email and get_by_email(new_email) is not None:
         return Result.failure("既に登録されているメールアドレスです")
 
     try:

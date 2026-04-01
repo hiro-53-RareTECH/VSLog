@@ -27,15 +27,15 @@ class ProductionConfig(Config):
 
     # PostgreSQL設定
     DATABASE_URL = os.getenv("DATABASE_URL")
-    POSTGRESQL_USER = os.getenv("POSTGRESQL_USER")
-    POSTGRESQL_PASSWORD = os.getenv("POSTGRESQL_PASSWORD")
-    POSTGRESQL_HOST = os.getenv("POSTGRESQL_HOST")
-    POSTGRESQL_PORT = "5432"
-    POSTGRESQL_DATABASE = os.getenv("POSTGRESQL_DATABASE")
+    POSTGRES_USER = os.getenv("POSTGRES_USER")
+    POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+    POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
+    POSTGRES_PORT = "5432"
+    POSTGRES_DB = os.getenv("POSTGRES_DB")
 
     SQLALCHEMY_DATABASE_URI = (
-        f'postgresql+psycopg2://{POSTGRESQL_USER}:{POSTGRESQL_PASSWORD}'
-        f'@{POSTGRESQL_HOST}:{POSTGRESQL_PORT}/{POSTGRESQL_DATABASE}'
+        f'postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PASSWORD}'
+        f'@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
     )
 
 class UnitTestingConfig(Config):
@@ -46,14 +46,29 @@ class UnitTestingConfig(Config):
     PROPAGATE_EXCEPTIONS = False
 
     # テスト用MySQL設定
-    MYSQL_USER = os.getenv("MYSQL_TEST_USER")
-    MYSQL_PASSWORD = os.getenv("MYSQL_TEST_PASSWORD")
-    MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
-    MYSQL_PORT = "3306"
-    MYSQL_DATABASE = os.getenv("MYSQL_TEST_DATABASE")
+    is_postgres = os.getenv("IS_POSTGRES", "false").lower() == "true"
 
-    SQLALCHEMY_DATABASE_URI = (
-    f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}'
-    f'@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}'
+    # テスト用PostgreSQL設定
+    if is_postgres:
+        POSTGRES_TEST_USER = os.getenv("POSTGRES_TEST_USER")
+        POSTGRES_TEST_PASSWORD = os.getenv("POSTGRES_TEST_PASSWORD")
+        POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
+        POSTGRES_PORT = "5432"
+        POSTGRES_TEST_DATABASE = os.getenv("POSTGRES_TEST_DATABASE")
+
+        SQLALCHEMY_DATABASE_URI = (
+        f'postgresql+psycopg2://{POSTGRES_TEST_USER}:{POSTGRES_TEST_PASSWORD}'
+        f'@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_TEST_DATABASE}'
     )
+    
+    else:
+        MYSQL_USER = os.getenv("MYSQL_TEST_USER")
+        MYSQL_PASSWORD = os.getenv("MYSQL_TEST_PASSWORD")
+        MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
+        MYSQL_PORT = "3306"
+        MYSQL_DATABASE = os.getenv("MYSQL_TEST_DATABASE")
 
+        SQLALCHEMY_DATABASE_URI = (
+        f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}'
+        f'@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}'
+        )
