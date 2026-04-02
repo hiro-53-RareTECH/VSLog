@@ -51,6 +51,24 @@ def register_user(app, common_credentials):
                 }
 
 @pytest.fixture()
+def another_register_user(app):
+    with app.app_context():
+        user = User(
+            user_id=uuid.uuid4(),
+            username='another_register_user',
+            email='another_register@gmail.com',
+            password=hash_password('another_register'),
+        )
+        db.session.add(user)
+        db.session.commit()
+
+        return {'user_id': user.user_id,
+                'username': user.username,
+                'email': user.email,
+                'password': user.password,
+                }
+
+@pytest.fixture()
 def auth_client(app, client, register_user, common_credentials):
     with app.test_request_context():
         url = url_for('auth.login_process')
