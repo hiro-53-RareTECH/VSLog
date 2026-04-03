@@ -4,6 +4,7 @@ from __future__ import annotations
 from datetime import date
 
 from sqlalchemy import func
+from sqlalchemy.engine import Engine
 
 from ...extensions import db
 from ...models import Field
@@ -19,14 +20,27 @@ def _build_filters(user_id: str, first_day: date | None = None, last_day: date |
         filters.append(StudyLog.study_date <= last_day)
     return filters
 
+# DBエンジンの違いによるdate_formatを吸収
+def date_format(column, period: Period, engine: Engine):
+    if engine.dialect.name == 'postgresql':
+        if period == 'year':
+            return func.to_char(StudyLog.study_date, 'MM').label('month')
+        if period == 'all':
+            return func.to_char(StudyLog.study_date, 'YYYY').label('year')
+    if engine.dialect.name == 'mysql':
+        if period == 'year':
+            return func.date_format(StudyLog.study_date, '%m').label('month')
+        if period == 'all':
+            return func.date_format(StudyLog.study_date, '%Y').label('year')
+
 # 横軸表示形式「年月日」の集計
 def agg_by_days(user_id: str, *, period: Period, first_day: date | None = None, last_day: date | None = None):
     if period in ('this_week', 'last_week', 'month'):
         selected_date = StudyLog.study_date
     elif period == 'year':
-        selected_date = func.date_format(StudyLog.study_date, '%m').label('month')
+        selected_date = date_format(StudyLog.study_date, 'year', db.engine)
     elif period == 'all':
-        selected_date = func.date_format(StudyLog.study_date, '%Y').label('year')
+        selected_date = date_format(StudyLog.study_date, 'all', db.engine)
     else:
         raise ValueError(f'invalid period: {period}')
     

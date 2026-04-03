@@ -9,7 +9,7 @@ def test_db_can_insert_user(app):
     '''
     with app.app_context():
         u = User(
-            user_id=uuid.uuid4(),
+            user_id=str(uuid.uuid4()),
             username='test_user',
             email='test@gmail.com',
             password=hash_password('password'),
