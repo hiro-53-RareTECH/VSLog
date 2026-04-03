@@ -22,7 +22,7 @@ def client(app):
 
 @pytest.fixture()
 def common_credentials():
-    common_user_id = uuid.uuid4()
+    common_user_id = str(uuid.uuid4())
     common_username = 'register_user'
     common_email = 'register@gmail.com'
     common_password = 'register1234'
@@ -40,6 +40,24 @@ def register_user(app, common_credentials):
             username=common_credentials['username'],
             email=common_credentials['email'],
             password=hash_password(common_credentials['password']),
+        )
+        db.session.add(user)
+        db.session.commit()
+
+        return {'user_id': user.user_id,
+                'username': user.username,
+                'email': user.email,
+                'password': user.password,
+                }
+
+@pytest.fixture()
+def another_register_user(app):
+    with app.app_context():
+        user = User(
+            user_id=str(uuid.uuid4()),
+            username='another_register_user',
+            email='another_register@gmail.com',
+            password=hash_password('another_register'),
         )
         db.session.add(user)
         db.session.commit()

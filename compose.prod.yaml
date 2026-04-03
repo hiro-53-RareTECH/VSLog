@@ -1,37 +1,36 @@
-# db(MySQL),app(Flask)のコンテナを作成
+# db(PostgreSQL),app(Flask)のコンテナを作成（Renderデプロイ確認用）
 services:
 
 # MySQL
   db:
     # コンテナ名をMySQLに指定
-    container_name: MySQL
+    container_name: PostgreSQL
     # MySQLのDockerfileをビルドする。コンテキストはカレントディレクトリ
     build:
       context: .
-      dockerfile: docker/MySQL/Dockerfile
+      dockerfile: docker/PostgreSQL/Dockerfile.prod
     # M1チップでも動くように
     # Intel Macの場合あってもなくても動く
     platform: linux/x86_64
     # ホストとコンテナのポート番号を指定
     ports:
-      - "3306:3306"
-    # ボリュームmysql_dataをコンテナの/var/lib/mysqlにボリュームマウントする
+      - "5432:5432"
+    # ボリュームpostgresql_dataをコンテナの/var/lib/postgresqlにボリュームマウントする
     volumes:
-      - mysql_data:/var/lib/mysql
-      - ./docker/MySQL/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgresql_data:/var/lib/postgresql
+      - ./docker/PostgreSQL/initdb:/docker-entrypoint-initdb.d
     # コンテナの環境変数を設定
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
       - TZ=Asia/Tokyo
     # .envファイルから環境変数を読み込む
     env_file:
-      - .env
+      - .env.prod
     healthcheck:
-      # mysqladmin(MySQLの管理を行うクライアントを使ってDBコンテナ自身（localhost:127.0.0.1)にpingを送ってヘルスチェックを行う)
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u${MYSQL_USER} -p${MYSQL_PASSWORD}"]
+      # pg_isreadyを使ってDBコンテナ自身（localhost:127.0.0.1)にpingを送ってヘルスチェックを行う
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       # ヘルスチェックのインターバルは10秒
       interval: 10s
       # タイムアウト時間は10秒
@@ -41,16 +40,16 @@ services:
       # ヘルスチェックが失敗しても無視する時間は30秒
       start_period: 30s
     networks:
-      - vslog_dev_network
+      - vslog_prod_network
 
 # Flask
   app:
     # コンテナ名をFlaskに変更
-    container_name: Flask
+    container_name: Flask_prod
     # FlaskのDockerfileをビルドする。コンテキストはカレントディレクトリ
     build:
       context: .
-      dockerfile: docker/Flask/Dockerfile
+      dockerfile: docker/Flask/Dockerfile.prod
     # ローカルのsrc, migrations, testsをコンテナにバインドマウントする
     volumes:
       - ./src:/app/src
@@ -67,15 +66,17 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: wait-for-it.sh db:3306 -- sh -c "flask db upgrade && flask run --host=0.0.0.0 --debug"
+    command: wait-for-it.sh db:5432 -- sh -c "flask db upgrade && flask run --host=0.0.0.0 --debug"
     # .envファイルから環境変数を読み込む
     env_file:
-      - .env
+      - .env.prod
     networks:
-      - vslog_dev_network
+      - vslog_prod_network
 
 networks:
-  vslog_dev_network:
+  vslog_prod_network:
 
 volumes:
-  mysql_data:
+  postgresql_data:
+
+
