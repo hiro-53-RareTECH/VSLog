@@ -1,9 +1,19 @@
-# アプリ名
-VSLog(Visualized Study Log：見える化された学習記録)
-
-## 概要
-日々の学習記録をグラフ化して「見える化」させるアプリである。  
+# ✨ VSLog
+VSLog(Visualized Study Log)という日々の学習記録をグラフ化して「見える化」させるアプリである。  
 学習状況の把握、学習へのモチベーション維持・向上を目的とする。
+
+## 🔗 URL
+https://vslog.onrender.com/  
+Renderというサービスでデプロイ。公開期間2026/4月末までを予定。
+
+## 📚 目次
+- [背景](#背景)
+- [ターゲット](#ターゲット)
+- [使用技術](#使用技術)
+- [デモ](#デモ)
+- [開発環境の構築](#開発環境の構築)
+- [ディレクトリ・ファイル構成](#ディレクトリファイル構成)
+- [詳細説明](#詳細説明)
 
 ## 背景
 未経験からITエンジニアになるためには、「1000時間以上」の勉強時間が必要とされている中、自身の学習時間がどの程度なのか、どのような分野を学習してきたのか等、学習状況が把握しづらいと感じていた。  
@@ -20,25 +30,13 @@ VSLog(Visualized Study Log：見える化された学習記録)
 ## 使用技術
 主な使用技術は以下のとおりである。
 
-### インフラ
-- Docker
-- (AWS)※今後デプロイのため使用する予定
-
-### フロントエンド
-- HTML
-- CSS
-- JavaScript
-
-### バックエンド
-- Python
-- MySQL
-
-### フレームワーク・ライブラリ
-- Flask
-- Flask-Migrate
-- Flask-SQLAlchemy
-- Jinja2
-- matplotlib
+| **カテゴリ** | **技術** |
+| --- | --- |
+| フロントエンド | HTML / CSS / JavaScript |
+| バックエンド | Python / Flask / MySQL / PostgreSQL |
+| テスト | Pytest |
+| インフラ | Render（Paas）/ Docker |
+| その他 | Figma/ Canva / GitHub |
 
 ## デモ
 以下のデモ動画にて、アプリの内容を示す。  
@@ -46,25 +44,34 @@ VSLog(Visualized Study Log：見える化された学習記録)
 
 [![デモ動画](<img width="auto" height="auto" alt="Image" src="https://github.com/user-attachments/assets/30b58de3-b13b-4e44-bb18-2aee5b241f6f" />)](https://github.com/user-attachments/assets/0df36f40-1d37-42a7-8828-cc6ba8cfe0c6)
 
-## アプリの起動・終了方法
+## 開発環境の構築
 ### 環境変数ファイルの準備
 .env.exampleファイルをコピーし、ファイル名を.envにしてルートディレクトリ直下に保存する。  
-.envには以下の内容を記述する。
+.envには以下の内容を記述する。  
+FLASKのSECRET_KEYは以下のコマンドの出力結果を設定する。  
+```
+python -c 'import secrets; print(secrets.token_hex())'
+```
 
 ```
 # MySQL設定
 MYSQL_HOST=db
 MYSQL_ROOT_PASSWORD=secret
-MYSQL_USER=testuser
+MYSQL_USER=appuser
 MYSQL_PASSWORD=pass1234
-MYSQL_DATABASE=myapp
-MYSQL_PORT=3306
+MYSQL_DATABASE=VSLog_db
+
+# MySQLテスト設定
+MYSQL_TEST_USER=testuser
+MYSQL_TEST_PASSWORD=test1234
+MYSQL_TEST_DATABASE=app_test
 
 # Flask設定
 FLASK_PORT=5000
 SECRET_KEY=dev-secret-key
-FLASK_APP=VSLog.app
+FLASK_APP='src:create_app("src.config.DevelopmentConfig")'
 FLASK_ENV=development
+FLASK_DEBUG=1
 ```
 
 ### Dockerによる起動・終了
@@ -78,7 +85,7 @@ docker compose up --build
 ```
 
 次にブラウザを開き、URLの入力フォームに以下を入力する。  
-http://localhost:5000/login
+http://localhost:5000/
 
 本アプリ（Flask）のポート番号は「5000」に設定しており、その後ろにログイン画面のURLを記述している。  
 既にローカルPC上でポート番号「5000」が使用されている場合は、.envファイルのFlaskポートの番号を変更する。例）5001, 55000など  
@@ -97,7 +104,6 @@ docker compose down
 
 ## ディレクトリ・ファイル構成
 ディレクトリ・ファイル構成を以下に示す。  
-本アプリでは「MVTモデル」を採用しており、M（Model）が「models.py」ファイル、V（View）が「views.py」ファイル、T（Template）が「templates」ディレクトリに当たる。
 
 <pre>
 .
@@ -167,12 +173,6 @@ docker compose down
     └── requirements.txt                        # Python依存パッケージ一覧
 </pre>
 
-### ディレクトリ・ファイル命名規則
-Flaskアプリの中身である.pyファイルは、前述したMVTモデルに準じ、「models.py」, 「views.py」と命名した。  
-Flaskでのtemplateファイル（html）は、Jinja2テンプレートエンジンが認識できるよう「templates」直下に置くこととし、各URL名と突き合わせができるよう、URL名と同じファイル名で命名した。  
-base.htmlはすべてのhtmlファイルに共通するヘッダー、フッター等の設定内容を記述している。  
-css, JSファイルは、htmlファイルとの突き合わせができるよう基本的にはhtmlと同じ名前にしているが、共通化できるものは一つのファイルに整理することとし、common, componentsという名前に設定した。
-
 ## 詳細説明
 以降より、本アプリの詳細説明を示す。
 
@@ -197,7 +197,8 @@ DBは、軽量で安定性が高く、小規模なアプリに適する **「MyS
 
 | **分類** | **URL** | **機能** |
 | --- | --- | --- |
-| 認証前 | /login | ログイン機能 |
+| 認証前 | / | スタート画面 |
+|  | /login | ログイン機能 |
 |  | /signup | 新規登録機能 |
 |  | /password-reset | パスワード再設定機能 |
 | 認証後 | /logout | ログアウト機能 |
@@ -230,7 +231,6 @@ DBは、軽量で安定性が高く、小規模なアプリに適する **「MyS
 - 学習日が一目でわかるように、学習履歴の記入・未記入を色分けする。
 
 #### 使用する色
-
 - ベースカラー：グレー、白
 - メインカラー：青（信頼・誠実）
 - 文字色：黒
@@ -259,56 +259,3 @@ ER図を以下に示す。
 - 分野名（field_name）の文字数は、PC上での視認性確保のため、最大20文字のVARCHAR(20)とする。
 - 凡例カラー（color_code）は、RGBで表現することとし、16進カラーコード（#FFFFFF）を表現可能なVARCHAR(7)とする。
 - 2038年問題を考慮し、created_atの型は「DATETIME」とする。
-
-### データフロー
-本アプリにおけるデータフローを次のとおり示す。  
-fetch APIにより、ユーザーが表示したい情報をFlaskへ送り、MySQL（DB）から必要な情報を取得し、responseを返すという流れである。  
-
-#### 全体図
-データフローの全体図を以下に示す。  
-
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant T as Template(Browser) (HTML/JS)
-    participant V as views.py(Server)
-    participant M as models.py(Server)
-    participant D as MySQL(DB)
-
-    U->>T: 入力 (form)
-    T->>V: fetch POST
-    V->>M: 条件分岐、対象関数の呼び出し
-    M->>D: SQL
-    D-->>M: 結果返却
-    M-->>V: 結果返却
-    V-->>T: JSON Response
-    T-->>U: 画面更新
-```
-
-#### 詳細図
-データフローの詳細図を以下に示す。  
-ここでは、本アプリの核となる機能の「グラフ・統計値取得」を対象とする。
-詳細図では、全体図にformの種類、Flask側での条件分岐、関数等を追記して示すものとする。  
-
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant T as index.html(Browser) (HTML/JS)
-    participant V as views.py(Server)
-    participant M as models.py(Server)
-    participant D as MySQL(DB)
-
-	  U->>T: form入力<br/>表示期間(period), 横軸(horizontalAxis), 縦軸(verticalAxis), グラフ種類(graphType)
-    T->>V: fetch POST /graph/<user_id>
-    V->>V: @app.route('/graph/<user_id>')<br/>get_graph_stats
-    V->>M: form内容からif文で条件分岐<br/>該当の関数呼び出し
-    M->>D: SQL SELECT<br/>学習日(study_date), 学習時間(hour), 学習分野(fieldname), 凡例カラー(color_code)
-    D-->>M: 結果返却
-    M-->>M: 結果を基にグラフ作成
-    M-->>V: グラフ(svg), 学習日数(total_day), 学習時間合計(total_hour), 学習時間平均(total_hour)
-    V-->>T: JSON Response<br/> {"svg": svg, "total_day": total_day, "total_hour": total_hour, "avg_hour": avg_hour}
-    T-->>U: DOM更新 (グラフ・統計値に反映)
-```
-<div style="text-align: right;">
-以上
-<div>
