@@ -107,70 +107,49 @@ docker compose down
 
 <pre>
 .
-└── VSLog/                                      # 個人開発プロジェクトのルート
-    ├── Docker/                                 # FlaskとMySQL用のDocker設定
-    │   ├── Flask/                              # Flask用ディレクトリ
-    │   │   └── Dockerfile                      # FlaskのDockerfile
-    │   └── MySQL/                              # MySQL用ディレクトリ
-    │       ├── Dockerfile                      # MySQLのDockerfile
-    │       └── my.cnf                          # MySQL設定ファイル
-    ├── migrations/                             # DBマイグレーション関連
-    │   ├── versions                            # バージョン管理スクリプト
-    │   ├── alembic.ini                         # Alembic設定ファイル
-    │   ├── env.py                              # マイグレーション環境設定
-    │   ├── README                              # マイグレーションテンプレREADME
-    │   └── script.py.mako                      # マイグレーションスクリプトテンプレ
-    ├── myapp/                                  # Flaskアプリ本体
-    │   ├── static/                             # 静的ファイル（CSS, JS, 画像）
-    │   │   ├── css/                            # CSSディレクトリ
-    │   │   │   ├── auth.css                    # 認証前（ログイン、新規登録、パスワード設定）のCSS
-    │   │   │   ├── base.css                    # ヘッダー、メイン、フッターの共通CSS
-    │   │   │   ├── color.css                   # 本アプリで使用する色設定のCSS
-    │   │   │   ├── components.css              # ボタン、テーブル等の共通コンポーネント（部品）のCSS
-    │   │   │   ├── index.css                   # ログイン後のホーム画面のCSS
-    │   │   │   ├── reset.css                   # ブラウザのデフォルトCSSのリセットのためのCSS
-    │   │   │   ├── responsive.css              # レスポンシブデザイン対応（タブレット・スマホ）のCSS
-    │   │   │   └── study.css                   # 学習記録関連のCSS
-    │   │   ├── image/                          # 画像ディレクトリ
-    │   │   │   ├── favicon/                    # ファビコン画像のディレクトリ
-    │   │   │   │   ├── apple-touch-icon.png    # あらゆるブラウザや端末で対応可能なように以下の画像を用意
-    │   │   │   │   ├── favicon-96x96.png       
-    │   │   │   │   ├── favicon.icon            
-    │   │   │   │   ├── favicon.svg             
-    │   │   │   │   └── site.webmanifest        
-    │   │   │   ├── average.png                 # ホーム画面の平均時間を示す画像
-    │   │   │   ├── days.png                    # ホーム画面の学習日数を示す画像
-    │   │   │   ├── logo.png                    # ロゴ画像
-    │   │   │   ├── menu-icon.png               # ハンバーガーメニューの画像
-    │   │   │   └── total.png                   # ホーム画面の合計時間を示す画像
-    │   │   └── js/                             # Javascriptディレクトリ
-    │   │       ├── common.js                   # ハンバーガーメニュー、flashメッセージ等の共通動作の設定JS
-    │   │       ├── index.js                    # ホーム画面の設定JS
-    │   │       ├── study_fields.js             # 学習分野登録・編集画面の設定JS
-    │   │       ├── study_logs_list.js          # 学習履歴一覧画面の設定JS
-    │   │       └── study_logs.js               # 学習記録登録・編集画面の設定JS
-    │   ├── templates/                          # Jinja2テンプレート (HTML)のディレクトリ（MVTのTに相当）
-    │   │   ├── base.html                       # 各HTMLの基本機能（ヘッダー・フッター、共通動作等）のHTML
-    │   │   ├── index.html                      # ホーム画面のHTML
-    │   │   ├── login.html                      # ログイン画面のHTML
-    │   │   ├── password_reset.html             # パスワード再設定画面（認証前）のHTML
-    │   │   ├── password_update.htm             # パスワード変更画面（認証後）のHTML
-    │   │   ├── profile_edit.html               # プロフィール編集画面のHTML
-    │   │   ├── signup.html                     # 新規登録画面のHTML
-    │   │   ├── study_fields.html               # 学習分野の登録・編集画面のHTML
-    │   │   ├── study_logs_list.html            # 学習履歴一覧画面のHTML
-    │   │   └── study_logs.html                 # 学習記録の登録・編集画面のHTML
-    │   ├── __init__.py                         # myappディレクトリをパッケージとして認識させるための空ファイル
-    │   ├── app.py                              # 本アプリを起動するためのファイル
-    │   ├── models.py                           # DBモデル、グラフ作成・描画等のためのファイル（MVTのMに相当）
-    │   └── views.py                            # 各画面へのルーティングのためのファイル（MVTのVに相当）
-    ├── .dockerignore                           # Dockerビルド除外ファイル
-    ├── .env                                    # 環境変数設定ファイル
-    ├── .gitignore                              # Git管理対象外リスト
-    ├── compose.yaml                            # FlaskとMySQLのDocker compose設定
-    ├── entrypoint.sh                           # Flaskアプリ起動時スクリプト
-    ├── README.md                               # 本プロジェクトの説明ファイル
-    └── requirements.txt                        # Python依存パッケージ一覧
+└── VSLog                                              # 個人開発のプロジェクトルート/
+    ├── docker                                         # Docker設定/
+    │   ├── Flask/
+    │   │   ├── Dockerfile
+    │   │   ├── Dockerfile.prod
+    │   │   └── wait-for-it.sh
+    │   ├── MySQL/
+    │   │   ├── Dockerfile
+    │   │   ├── init.sql
+    │   │   └── my.cnf
+    │   └── PostgreSQL/
+    │       ├── initdb/
+    │       │   └── 01_create_test_user.sh
+    │       └── Dockerfile.prod
+    ├── migrations                                      # migration管理
+    ├── src                                             # ソースコード/
+    │   ├── analytics                                   # 統計値・グラフ取得のためのビジネスロジック層
+    │   ├── blueprints                                  # HTTPリクエスト／レスポンス、コントローラー層
+    │   ├── models                                      # ORM定義、モデル層
+    │   ├── presenters                                  # DB取得データの整形
+    │   ├── static                                      # 静的ファイル一式
+    │   ├── templates                                   # html一式
+    │   ├── usecases                                    # 認証、プロフィール変更、統計値・グラフ取得のためのユースケース層
+    │   ├── __init__.py                                 # Flaskアプリのファクトリー
+    │   ├── config.py                                   # 開発環境、本番環境、テスト環境設定
+    │   └── extensions.py                               # SQLAlchemy, migrationの拡張機能設定
+    ├── tests                                           # Pytestによるテスト設定/
+    │   ├── test_auth                                   # 認証テスト
+    │   ├── test_profile                                # プロフィールテスト
+    │   ├── test_study                                  # 統計値・グラフテスト
+    │   ├── conftest.py                                 # テストの初期設定
+    │   ├── test_db_smoke.py                            # DB起動確認テスト
+    │   ├── test_error.py                               # エラーステータスコードテスト
+    │   └── test_show_endpoints.py                      # エンドポイントテスト
+    ├── .dockerignore                                   # Dockerビルド除外ファイル
+    ├── .gitignore                                      # Git管理対象外リスト
+    ├── compose.prod.yaml                               # 本番環境のDockercompose設定
+    ├── compose.yaml                                    # 開発環境のDockercompose設定
+    ├── Makefile                                        # コマンド省略のための設定
+    ├── pytest.ini                                      # Pytestのルートディレクトリ設定
+    ├── README.md                                       # 本プロジェクトの説明ファイル
+    ├── requirements.txt                                # Python依存パッケージ一覧
+    └── wsgi.py                                         # Flaskアプリ本番環境設定
 </pre>
 
 ## 詳細説明
