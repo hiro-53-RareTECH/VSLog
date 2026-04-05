@@ -107,22 +107,22 @@ docker compose down
 
 <pre>
 .
-└── VSLog                                              # 個人開発のプロジェクトルート/
-    ├── docker                                         # Docker設定/
-    │   ├── Flask/
-    │   │   ├── Dockerfile
-    │   │   ├── Dockerfile.prod
-    │   │   └── wait-for-it.sh
-    │   ├── MySQL/
-    │   │   ├── Dockerfile
-    │   │   ├── init.sql
-    │   │   └── my.cnf
-    │   └── PostgreSQL/
-    │       ├── initdb/
-    │       │   └── 01_create_test_user.sh
-    │       └── Dockerfile.prod
+└── VSLog                                               # 個人開発のプロジェクトルート
+    ├── docker                                          # Docker設定
+    │   ├── Flask                                       # FlaskのDocker設定
+    │   │   ├── Dockerfile　                            # Flask開発環境のDockerfile
+    │   │   ├── Dockerfile.prod　                       # Flask本番環境のDockerfile
+    │   │   └── wait-for-it.sh　                        # DBポートの解放後にコンテナ起動するための設定
+    │   ├── MySQL                                       # MySQLのDockerfile
+    │   │   ├── Dockerfile                              # MySQL開発環境のDockerfile
+    │   │   ├── init.sql                                # テスト用DB設定のためのinit.sql
+    │   │   └── my.cnf                                  # MySQLの設定ファイル
+    │   └── PostgreSQL                                  # PostgreSQLのDocker設定（Renderと同じDBでの動作確認用）
+    │       ├── initdb                                  # テスト用DB設定のためのinit
+    │       │   └── 01_create_test_user.sh              # テスト用DB設定のためのinit
+    │       └── Dockerfile.prod                         # PostgreSQLのDockerfile
     ├── migrations                                      # migration管理
-    ├── src                                             # ソースコード/
+    ├── src                                             # ソースコード
     │   ├── analytics                                   # 統計値・グラフ取得のためのビジネスロジック層
     │   ├── blueprints                                  # HTTPリクエスト／レスポンス、コントローラー層
     │   ├── models                                      # ORM定義、モデル層
@@ -133,7 +133,7 @@ docker compose down
     │   ├── __init__.py                                 # Flaskアプリのファクトリー
     │   ├── config.py                                   # 開発環境、本番環境、テスト環境設定
     │   └── extensions.py                               # SQLAlchemy, migrationの拡張機能設定
-    ├── tests                                           # Pytestによるテスト設定/
+    ├── tests                                           # Pytestによるテスト設定
     │   ├── test_auth                                   # 認証テスト
     │   ├── test_profile                                # プロフィールテスト
     │   ├── test_study                                  # 統計値・グラフテスト
@@ -164,7 +164,9 @@ Flaskは、Djangoとは異なり、マイグレーション、ORMが標準搭載
 保守性・運用性の向上のため、データベースのスキーマを柔軟に変更できるマイグレーションライブラリである **「Flask-Migrate」** を追加する。  
 さらに、オブジェクト指向プログラミングとデータベースを結びつけ、RDB製品のSQL文法の違いを吸収できるORMを採用することとし、そのライブラリである **「Flask-SQLAlchemy」** を追加する。  
 また、グラフ作成ライブラリである **「matplotlib」** を追加する。  
-DBは、軽量で安定性が高く、小規模なアプリに適する **「MySQL」** とする。
+DBは、軽量で安定性が高く、小規模なアプリに適する **「MySQL」** とする。  
+ただし、デプロイのために **「Render」** というPaasを使用するため、デプロイ時のDBはRenderでの使用が推奨されている **「PostgreSQL」** とする。  
+**「Render」** を使用した理由は、無料でWebアプリを公開可能であり、Python・Flaskに対応していたためである。  
 
 ### 機能一覧
 本アプリではユーザーが学習分野を自由に登録し、その学習分野に関する学習時間・学習内容を日報形式で登録すると自動的にグラフが作成され、積み上げた学習記録が可視化できるようになっている。  
